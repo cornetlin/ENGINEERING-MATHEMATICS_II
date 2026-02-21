@@ -84,7 +84,50 @@ button{font-family:inherit;cursor:pointer}
 .result-box{background:rgba(0,0,0,0.25);border-radius:8px;padding:12px 16px;margin-top:10px;min-height:40px;font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text2)}
 .footer{text-align:center;margin-top:36px;padding:14px 0;border-top:1px solid var(--border);color:var(--text4);font-size:11px;font-family:'JetBrains Mono',monospace}
 .katex{font-size:1.05em!important}.katex-display{margin:10px 0!important;overflow-x:auto;overflow-y:hidden}
-canvas{border:1px solid var(--border2);border-radius:8px;background:rgba(0,0,0,0.2);margin:10px 0;max-width:100%}
+canvas{border:1px solid var(--border2);border-radius:8px;background:rgba(0,0,0,0.2);margin:10px 0;max-width:100%;height:auto}
+
+/* ===== Responsive: Tablet ===== */
+@media(max-width:800px){
+  .section-title{font-size:22px}
+  .card{padding:16px 14px;border-radius:10px}
+  .interactive-box{padding:12px}
+  .formula-block{padding:10px;font-size:14px}
+  .def-box,.thm-box,.prop-box,.ex-box,.note-box{padding:10px 12px}
+  canvas[width="760"]{max-width:100%!important}
+}
+/* ===== Responsive: Mobile ===== */
+@media(max-width:600px){
+  .main{padding:12px 10px 40px!important;padding-top:50px!important}
+  .section-title{font-size:20px}
+  .section-sub{font-size:12px;margin-bottom:16px}
+  .card{padding:12px 10px;margin-bottom:10px;border-radius:8px}
+  .card-title{font-size:15px}
+  .interactive-box{padding:10px 8px;margin:8px 0}
+  .interactive-box h4{font-size:12px}
+  .def-box,.thm-box,.prop-box,.ex-box,.note-box{padding:8px 10px;border-radius:8px;margin:8px 0}
+  .prop-list li{font-size:12px;padding:4px 0}
+  .formula-block{padding:8px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .katex{font-size:0.9em!important}
+  .mat-input input{width:42px;height:30px;font-size:12px}
+  .vec-input input{width:50px;height:30px;font-size:12px}
+  .result-box{padding:8px 10px;font-size:12px}
+  .btn{padding:6px 14px;font-size:12px}
+  .btn-sm{padding:5px 10px;font-size:11px}
+  .footer{font-size:10px;margin-top:20px}
+  canvas[width="760"]{max-width:100%!important}
+  canvas{height:auto!important;min-height:200px}
+}
+/* ===== Responsive: Small phone ===== */
+@media(max-width:400px){
+  .main{padding:8px 6px 30px!important;padding-top:48px!important}
+  .section-title{font-size:18px}
+  .card{padding:10px 8px}
+  .mat-input input{width:36px;height:28px;font-size:11px}
+  .vec-input input{width:42px;height:28px;font-size:11px}
+  .mat-input{gap:2px;margin:4px}
+  .interactive-box{padding:8px 6px}
+  .prop-list li{font-size:11px}
+}
 </style>
 </head>
 <body>
@@ -975,6 +1018,17 @@ canvas{border:1px solid var(--border2);border-radius:8px;background:rgba(0,0,0,0
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 <script>
+/* ===== Canvas responsive helper ===== */
+function prepCanvas(cv){
+  // Use CSS display width, fall back to HTML attribute, fall back to 760
+  var w=cv.clientWidth||cv.parentElement.clientWidth||parseInt(cv.getAttribute('width'))||760;
+  var hAttr=parseInt(cv.getAttribute('height'))||340;
+  var h=Math.round(hAttr*w/760); // proportional height
+  cv.width=w;cv.height=h;
+  cv.style.width=w+'px';cv.style.height=h+'px';
+  return {w:w,h:h};
+}
+
 /* ===== 導航 ===== */
 function go(id){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
@@ -1146,7 +1200,7 @@ function stopAllAnim(){for(let k in animFrames){cancelAnimationFrame(animFrames[
 /* --- 01 向量函數：螺旋曲線 + 切線向量 --- */
 function animVecFunc(){
   const cv=document.getElementById('cv-vecfunc');if(!cv)return;
-  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  var sz=prepCanvas(cv);const c=cv.getContext('2d'),W=sz.w,H=sz.h;
   let t0=0;
   function draw(){
     animFrames.vecfunc=requestAnimationFrame(draw);
@@ -1227,7 +1281,7 @@ function animVecFunc(){
 /* --- 02 弧長量測 --- */
 function animArcLen(){
   const cv=document.getElementById('cv-arclen');if(!cv)return;
-  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  var sz=prepCanvas(cv);const c=cv.getContext('2d'),W=sz.w,H=sz.h;
   let t0=0;
   function draw(){
     animFrames.arclen=requestAnimationFrame(draw);
@@ -1271,7 +1325,7 @@ function animArcLen(){
 /* --- 03 曲率：密切圓 --- */
 function animCurvature(){
   const cv=document.getElementById('cv-curvature');if(!cv)return;
-  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  var sz=prepCanvas(cv);const c=cv.getContext('2d'),W=sz.w,H=sz.h;
   let t0=0;
   function f(x){return 0.15*x*x*x-0.8*x;}
   function fp(x){return 0.45*x*x-0.8;}
@@ -1348,7 +1402,7 @@ function drawArrow(c,x1,y1,x2,y2,color){
 /* --- 04 梯度向量場 + 等高線 --- */
 function drawGradField(){
   const cv=document.getElementById('cv-gradient');if(!cv)return;
-  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  var sz=prepCanvas(cv);const c=cv.getContext('2d'),W=sz.w,H=sz.h;
   c.clearRect(0,0,W,H);
   const cx=W/2,cy=H/2,sc=50;
   // contour lines for f=x^2+y^2
@@ -1390,7 +1444,7 @@ function drawGradField(){
 /* --- 05 散度：源與匯粒子動畫 --- */
 function animDivergence(){
   const cv=document.getElementById('cv-div');if(!cv)return;
-  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  var sz=prepCanvas(cv);const c=cv.getContext('2d'),W=sz.w,H=sz.h;
   const particles=[];
   for(let i=0;i<80;i++){
     const side=i<40?0:1; // 0=source, 1=sink
@@ -1463,7 +1517,7 @@ function animDivergence(){
 /* --- 06 旋度：旋轉流場 vs 無旋場 --- */
 function animCurl(){
   const cv=document.getElementById('cv-curl');if(!cv)return;
-  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  var sz=prepCanvas(cv);const c=cv.getContext('2d'),W=sz.w,H=sz.h;
   const pL=[],pR=[];
   for(let i=0;i<50;i++){
     pL.push({ang:Math.random()*Math.PI*2,r:20+Math.random()*90});
@@ -1524,7 +1578,7 @@ function animCurl(){
 /* --- 07 線積分：做功動畫 --- */
 function animLineInt(){
   const cv=document.getElementById('cv-lineint');if(!cv)return;
-  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  var sz=prepCanvas(cv);const c=cv.getContext('2d'),W=sz.w,H=sz.h;
   let t0=0;
   const cx=W/2,cy=H/2,sc=60;
   function curve(t){return [cx+sc*(2*Math.cos(t)),cy-sc*(1.2*Math.sin(t))];}
@@ -1602,7 +1656,7 @@ function animLineInt(){
 /* --- 09 Green 定理：循環動畫 --- */
 function animGreen(){
   const cv=document.getElementById('cv-green');if(!cv)return;
-  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  var sz=prepCanvas(cv);const c=cv.getContext('2d'),W=sz.w,H=sz.h;
   let t0=0;
   const cx=W/2,cy=H/2;
   function draw(){
@@ -1659,7 +1713,7 @@ function animGreen(){
 /* --- 08 路徑獨立性 --- */
 function animPathInd(){
   const cv=document.getElementById('cv-pathind');if(!cv)return;
-  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  var sz=prepCanvas(cv);const c=cv.getContext('2d'),W=sz.w,H=sz.h;
   let t0=0;
   const cx=W/2,cy=H/2,sc=80;
   // Points A and B
@@ -1733,7 +1787,7 @@ function animPathInd(){
 /* --- 10 面積分 --- */
 function animSurfInt(){
   const cv=document.getElementById('cv-surfint');if(!cv)return;
-  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  var sz=prepCanvas(cv);const c=cv.getContext('2d'),W=sz.w,H=sz.h;
   let t0=0;
   const cx=W/2,cy=H/2,scale=60;
   function draw(){
@@ -1798,7 +1852,7 @@ function animSurfInt(){
 /* --- 11 散度定理 --- */
 function animDivThm(){
   const cv=document.getElementById('cv-divthm');if(!cv)return;
-  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  var sz=prepCanvas(cv);const c=cv.getContext('2d'),W=sz.w,H=sz.h;
   let t0=0;
   const cx=W/2,cy=H/2,R=100;
   const particles=[];
@@ -1863,7 +1917,7 @@ function animDivThm(){
 /* --- 12 Stokes 定理 --- */
 function animStokes(){
   const cv=document.getElementById('cv-stokes');if(!cv)return;
-  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  var sz=prepCanvas(cv);const c=cv.getContext('2d'),W=sz.w,H=sz.h;
   let t0=0;
   const cx=W/2,cy=H/2,scale=70;
   function draw(){

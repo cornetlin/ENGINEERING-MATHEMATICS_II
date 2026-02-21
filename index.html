@@ -157,9 +157,23 @@ a.topic .num{color:var(--text4);margin-right:5px;font-weight:700}
 }
 
 @media(max-width:600px){
-  .hero{padding:48px 20px 36px}
-  .container{padding:0 16px}
-  .topics{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+  .hero{padding:36px 16px 28px}
+  .hero h1{font-size:28px}
+  .container{padding:0 12px}
+  .topics{grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:6px}
+  a.topic{font-size:12px;padding:6px 8px}
+  .stat .val{font-size:22px}
+  .card-banner h3{font-size:20px}
+  .card-banner{padding:28px 16px}
+  .course-card{border-radius:10px}
+  .features{gap:12px}
+  .feature{padding:16px}
+}
+@media(max-width:400px){
+  .hero h1{font-size:24px}
+  .stats{grid-template-columns:1fr 1fr;gap:8px}
+  .stat{padding:14px 10px}
+  .topics{grid-template-columns:repeat(auto-fill,minmax(90px,1fr))}
 }
 </style>
 </head>

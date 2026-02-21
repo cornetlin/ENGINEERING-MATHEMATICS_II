@@ -89,6 +89,49 @@ button{font-family:inherit;cursor:pointer}
 .anim-canvas{width:100%;background:rgba(0,0,0,0.2);border-radius:12px;border:1px solid var(--border2);cursor:crosshair;display:block;margin:12px 0}
 .anim-controls{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;align-items:center}
 .btn-sm{padding:6px 14px;font-size:12px}
+
+/* ===== Responsive: Tablet ===== */
+@media(max-width:800px){
+  .section-title{font-size:22px}
+  .card{padding:16px 14px;border-radius:10px}
+  .interactive-box{padding:12px}
+  .formula-block{padding:10px;font-size:14px}
+  .def-box,.thm-box,.prop-box,.ex-box,.note-box{padding:10px 12px}
+  canvas[width="760"]{max-width:100%!important}
+}
+/* ===== Responsive: Mobile ===== */
+@media(max-width:600px){
+  .main{padding:12px 10px 40px!important;padding-top:50px!important}
+  .section-title{font-size:20px}
+  .section-sub{font-size:12px;margin-bottom:16px}
+  .card{padding:12px 10px;margin-bottom:10px;border-radius:8px}
+  .card-title{font-size:15px}
+  .interactive-box{padding:10px 8px;margin:8px 0}
+  .interactive-box h4{font-size:12px}
+  .def-box,.thm-box,.prop-box,.ex-box,.note-box{padding:8px 10px;border-radius:8px;margin:8px 0}
+  .prop-list li{font-size:12px;padding:4px 0}
+  .formula-block{padding:8px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .katex{font-size:0.9em!important}
+  .mat-input input{width:42px;height:30px;font-size:12px}
+  .result-box{padding:8px 10px;font-size:12px}
+  .btn{padding:6px 14px;font-size:12px}
+  .btn-sm{padding:5px 10px;font-size:11px}
+  .anim-controls{gap:5px}
+  .footer{font-size:10px;margin-top:20px}
+  select{font-size:12px!important;max-width:100%}
+  canvas[width="760"]{max-width:100%!important}
+  #bldg-canvas{height:320px!important}
+}
+/* ===== Responsive: Small phone ===== */
+@media(max-width:400px){
+  .main{padding:8px 6px 30px!important;padding-top:48px!important}
+  .section-title{font-size:18px}
+  .card{padding:10px 8px}
+  .mat-input input{width:36px;height:28px;font-size:11px}
+  .mat-input{gap:2px;margin:4px}
+  .interactive-box{padding:8px 6px}
+  .prop-list li{font-size:11px}
+}
 </style>
 </head>
 <body>
@@ -210,7 +253,7 @@ button{font-family:inherit;cursor:pointer}
   <div class="card">
     <div class="card-title">動畫展示 <span class="en">Animation</span></div>
     <div style="text-align:center">
-      <canvas id="cv-matvec" width="760" height="360" style="background:#1b1b2f;border-radius:10px;max-width:100%"></canvas>
+      <canvas id="cv-matvec" width="760" height="360" style="background:#1b1b2f;border-radius:10px;max-width:100%;height:auto"></canvas>
       <div style="font-size:11px;color:var(--text3);margin-top:6px">向量加法：平行四邊形法則 a + b = c</div>
     </div>
   </div>
@@ -265,7 +308,7 @@ button{font-family:inherit;cursor:pointer}
   <div class="card">
     <div class="card-title">動畫展示 <span class="en">Animation</span></div>
     <div style="text-align:center">
-      <canvas id="cv-matmul" width="760" height="360" style="background:#1b1b2f;border-radius:10px;max-width:100%"></canvas>
+      <canvas id="cv-matmul" width="760" height="360" style="background:#1b1b2f;border-radius:10px;max-width:100%;height:auto"></canvas>
       <div style="font-size:11px;color:var(--text3);margin-top:6px">矩陣乘法：行列點積動畫，結果矩陣逐元素產生</div>
     </div>
   </div>
@@ -620,7 +663,7 @@ button{font-family:inherit;cursor:pointer}
   <div class="card">
     <div class="card-title">動畫展示 <span class="en">Animation</span></div>
     <div style="text-align:center">
-      <canvas id="cv-inverse" width="760" height="360" style="background:#1b1b2f;border-radius:10px;max-width:100%"></canvas>
+      <canvas id="cv-inverse" width="760" height="360" style="background:#1b1b2f;border-radius:10px;max-width:100%;height:auto"></canvas>
       <div style="font-size:11px;color:var(--text3);margin-top:6px">反矩陣的幾何意義：A 變換後再用 A⁻¹ 變換，回到原始狀態</div>
     </div>
   </div>
@@ -781,7 +824,7 @@ button{font-family:inherit;cursor:pointer}
   <div class="card">
     <div class="card-title">動畫展示 <span class="en">Animation</span></div>
     <div style="text-align:center">
-      <canvas id="cv-symm" width="760" height="360" style="background:#1b1b2f;border-radius:10px;max-width:100%"></canvas>
+      <canvas id="cv-symm" width="760" height="360" style="background:#1b1b2f;border-radius:10px;max-width:100%;height:auto"></canvas>
       <div style="font-size:11px;color:var(--text3);margin-top:6px">對稱矩陣的特徵向量正交性：特徵向量只變長，其他向量會旋轉</div>
     </div>
   </div>
@@ -827,7 +870,7 @@ button{font-family:inherit;cursor:pointer}
   <div class="card">
     <div class="card-title">動畫展示 <span class="en">Animation</span></div>
     <div style="text-align:center">
-      <canvas id="cv-diag" width="760" height="360" style="background:#1b1b2f;border-radius:10px;max-width:100%"></canvas>
+      <canvas id="cv-diag" width="760" height="360" style="background:#1b1b2f;border-radius:10px;max-width:100%;height:auto"></canvas>
       <div style="font-size:11px;color:var(--text3);margin-top:6px">對角化視覺化：原始座標 vs 特徵向量座標，對角矩陣的簡潔作用</div>
     </div>
   </div>
@@ -898,7 +941,7 @@ button{font-family:inherit;cursor:pointer}
   <div class="card">
     <div class="card-title">動畫展示 <span class="en">Animation</span></div>
     <div style="text-align:center">
-      <canvas id="cv-qf" width="760" height="360" style="background:#1b1b2f;border-radius:10px;max-width:100%"></canvas>
+      <canvas id="cv-qf" width="760" height="360" style="background:#1b1b2f;border-radius:10px;max-width:100%;height:auto"></canvas>
       <div style="font-size:11px;color:var(--text3);margin-top:6px">二次式的等高線：原始座標的傾斜橢圓變為主軸對齐的橢圓</div>
     </div>
   </div>
