@@ -1,0 +1,1951 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>工程數學二 — 向量微積分互動教學</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#1a1814;--card:rgba(255,255,255,0.03);--card2:rgba(255,255,255,0.05);
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --text:#f0ead6;--text2:#c8c0b0;--text3:#8a8070;--text4:#5c4a3a;
+  --teal:#2d7d9a;--purple:#a855f7;--gold:#e8b339;--tan:#d4a574;
+  --red:#e05555;--green:#3ba55d;--blue:#5b9bd5;
+  --nav-w:240px;
+}
+body{min-height:100vh;background:var(--bg);color:var(--text);font-family:'Noto Sans TC',sans-serif;font-size:15px;line-height:1.85}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:3px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+button{font-family:inherit;cursor:pointer}
+.layout{display:flex;min-height:100vh}
+.sidebar{
+  width:var(--nav-w);min-height:100vh;position:fixed;left:0;top:0;
+  background:rgba(20,18,14,.97);border-right:1px solid var(--border);
+  padding:20px 0;overflow-y:auto;z-index:100;
+  backdrop-filter:blur(12px);transition:transform .3s;
+}
+.sidebar-header{padding:0 18px 16px;border-bottom:1px solid var(--border)}
+.sidebar-header h1{
+  font-size:16px;font-weight:800;font-family:'Playfair Display',serif;
+  background:linear-gradient(135deg,var(--text),var(--tan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:3px;
+}
+.sidebar-header .sub{font-size:11px;color:var(--text3);font-weight:400}
+.nav-group{padding:10px 0}
+.nav-group-title{font-size:10px;font-weight:700;color:var(--text4);letter-spacing:.12em;text-transform:uppercase;padding:0 18px;margin-bottom:4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 18px;cursor:pointer;transition:all .2s;font-size:13px;color:var(--text3);border-left:3px solid transparent}
+.nav-item:hover{color:var(--text2);background:rgba(255,255,255,.03)}
+.nav-item.active{color:var(--gold);background:rgba(232,179,57,.06);border-left-color:var(--gold);font-weight:700}
+.nav-item .num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text4);width:28px;flex-shrink:0}
+.hamburger{display:none;position:fixed;top:14px;left:14px;z-index:200;background:rgba(30,27,22,.95);border:1px solid var(--border);border-radius:10px;padding:10px 13px;cursor:pointer;color:var(--text2);font-size:18px}
+@media(max-width:800px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.hamburger{display:block}.main{margin-left:0!important;padding:20px!important;padding-top:56px!important}}
+.main{margin-left:var(--nav-w);padding:36px 40px 60px;max-width:860px;margin-right:auto;width:calc(100% - var(--nav-w))}
+@media(min-width:1200px){.main{margin-left:calc(var(--nav-w) + (100% - var(--nav-w) - 860px)/2)}}
+.section{display:none;animation:fadeIn .3s ease}.section.active{display:block}
+.section-tag{display:inline-block;padding:4px 14px;border-radius:20px;background:rgba(45,125,154,0.15);color:var(--teal);font-size:12px;font-weight:700;letter-spacing:2px;margin-bottom:10px;font-family:'JetBrains Mono',monospace}
+.section-title{font-size:28px;font-weight:900;font-family:'Playfair Display',serif;background:linear-gradient(135deg,var(--text),var(--tan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
+.section-sub{font-size:14px;color:var(--text3);margin-bottom:28px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:16px}
+.card-title{font-size:17px;font-weight:800;font-family:'Playfair Display',serif;margin-bottom:10px;color:var(--text)}
+.card-title .en{font-size:12px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-left:8px;font-weight:400}
+.def-box{background:rgba(45,125,154,0.08);border:1px solid rgba(45,125,154,0.2);border-radius:10px;padding:14px 18px;margin:12px 0}
+.def-box .label{font-size:11px;font-weight:700;color:var(--teal);letter-spacing:1px;margin-bottom:6px}
+.thm-box{background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.2);border-radius:10px;padding:14px 18px;margin:12px 0}
+.thm-box .label{font-size:11px;font-weight:700;color:var(--purple);letter-spacing:1px;margin-bottom:6px}
+.prop-box{background:rgba(232,179,57,0.08);border:1px solid rgba(232,179,57,0.2);border-radius:10px;padding:14px 18px;margin:12px 0}
+.prop-box .label{font-size:11px;font-weight:700;color:var(--gold);letter-spacing:1px;margin-bottom:6px}
+.ex-box{background:rgba(59,165,93,0.08);border:1px solid rgba(59,165,93,0.2);border-radius:10px;padding:14px 18px;margin:12px 0}
+.ex-box .label{font-size:11px;font-weight:700;color:var(--green);letter-spacing:1px;margin-bottom:6px}
+.note-box{background:rgba(212,165,116,0.08);border:1px solid rgba(212,165,116,0.2);border-radius:10px;padding:14px 18px;margin:12px 0}
+.note-box .label{font-size:11px;font-weight:700;color:var(--tan);letter-spacing:1px;margin-bottom:6px}
+.formula-block{background:rgba(0,0,0,0.2);border-radius:10px;padding:16px;margin:12px 0;text-align:center;overflow-x:auto}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.grid-2{grid-template-columns:1fr}}
+.type-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-align:center}
+.type-card .name{font-size:15px;font-weight:700;margin-bottom:2px}
+.type-card .en{font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-bottom:8px}
+.prop-list{list-style:none;padding:0;margin:8px 0}
+.prop-list li{padding:6px 0;border-bottom:1px solid var(--border);color:var(--text2);font-size:14px}
+.prop-list li:last-child{border-bottom:none}
+.interactive-box{background:rgba(0,0,0,0.15);border:1px solid var(--border2);border-radius:12px;padding:18px;margin:14px 0}
+.interactive-box h4{font-size:14px;font-weight:700;color:var(--teal);margin-bottom:10px}
+.mat-input{display:inline-grid;gap:4px;margin:8px}
+.mat-input input{width:52px;height:36px;text-align:center;border:1px solid var(--border2);border-radius:6px;background:rgba(255,255,255,0.04);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:14px}
+.mat-input input:focus{outline:none;border-color:var(--teal);background:rgba(45,125,154,0.1)}
+.vec-input input{width:64px;height:36px;text-align:center;border:1px solid var(--border2);border-radius:6px;background:rgba(255,255,255,0.04);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:14px;margin:2px}
+.vec-input input:focus{outline:none;border-color:var(--teal);background:rgba(45,125,154,0.1)}
+.btn{display:inline-block;padding:8px 20px;border-radius:8px;border:none;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-teal{background:rgba(45,125,154,0.2);color:var(--teal)}.btn-teal:hover{background:rgba(45,125,154,0.35)}
+.btn-gold{background:rgba(232,179,57,0.2);color:var(--gold)}.btn-gold:hover{background:rgba(232,179,57,0.35)}
+.btn-purple{background:rgba(168,85,247,0.2);color:var(--purple)}.btn-purple:hover{background:rgba(168,85,247,0.35)}
+.result-box{background:rgba(0,0,0,0.25);border-radius:8px;padding:12px 16px;margin-top:10px;min-height:40px;font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text2)}
+.footer{text-align:center;margin-top:36px;padding:14px 0;border-top:1px solid var(--border);color:var(--text4);font-size:11px;font-family:'JetBrains Mono',monospace}
+.katex{font-size:1.05em!important}.katex-display{margin:10px 0!important;overflow-x:auto;overflow-y:hidden}
+canvas{border:1px solid var(--border2);border-radius:8px;background:rgba(0,0,0,0.2);margin:10px 0;max-width:100%}
+</style>
+</head>
+<body>
+<button class="hamburger" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+<div class="layout">
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <a href="index.html" style="display:flex;align-items:center;gap:6px;color:var(--text3);font-size:12px;text-decoration:none;margin-bottom:10px;padding:5px 0;transition:color .2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text3)'">← 返回首頁</a>
+    <h1>向量微積分</h1><div class="sub">工程數學二 互動教學</div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">向量函數與曲線</div>
+    <div class="nav-item active" onclick="go('sec-01')"><span class="num">01</span>向量函數</div>
+    <div class="nav-item" onclick="go('sec-02')"><span class="num">02</span>弧長</div>
+    <div class="nav-item" onclick="go('sec-03')"><span class="num">03</span>曲率</div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">向量微分</div>
+    <div class="nav-item" onclick="go('sec-04')"><span class="num">04</span>梯度與方向導數</div>
+    <div class="nav-item" onclick="go('sec-05')"><span class="num">05</span>散度</div>
+    <div class="nav-item" onclick="go('sec-06')"><span class="num">06</span>旋度</div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-title">向量積分</div>
+    <div class="nav-item" onclick="go('sec-07')"><span class="num">07</span>線積分</div>
+    <div class="nav-item" onclick="go('sec-08')"><span class="num">08</span>路徑獨立性</div>
+    <div class="nav-item" onclick="go('sec-09')"><span class="num">09</span>Green 定理</div>
+    <div class="nav-item" onclick="go('sec-10')"><span class="num">10</span>面積分</div>
+    <div class="nav-item" onclick="go('sec-11')"><span class="num">11</span>散度定理</div>
+    <div class="nav-item" onclick="go('sec-12')"><span class="num">12</span>Stokes 定理</div>
+  </div>
+</nav>
+
+<div class="main">
+
+<!-- ==================== SEC-01 向量函數 ==================== -->
+<div class="section active" id="sec-01">
+<div class="section-tag">UNIT 01</div>
+<div class="section-title">向量函數</div>
+<div class="section-sub">Vector Functions</div>
+
+<div class="card">
+  <div class="card-title">向量函數的定義 <span class="en">Vector-Valued Function</span></div>
+  <div class="def-box">
+    <div class="label">DEFINITION</div>
+    向量函數 \(\mathbf{r}(t)\) 將參數 \(t\) 映射到空間向量：
+    <div class="formula-block">$\mathbf{r}(t) = \begin{bmatrix} x(t) \\ y(t) \\ z(t) \end{bmatrix} = x(t)\,\mathbf{i} + y(t)\,\mathbf{j} + z(t)\,\mathbf{k}$</div>
+    其中 \(x(t), y(t), z(t)\) 為純量函數（分量函數）。
+  </div>
+  <p style="margin-top:10px;color:var(--text2)">向量函數的幾何意義：當參數 \(t\) 變化時，\(\mathbf{r}(t)\) 的終點描繪出一條空間曲線。</p>
+  <div style="text-align:center;margin-top:14px">
+    <canvas id="cv-vecfunc" width="760" height="340"></canvas>
+    <div style="font-size:11px;color:var(--text3);margin-top:4px">動畫：螺旋曲線 r(t)=(cos t, sin t, 0.15t) 上的移動點與切線向量 <span style="color:var(--gold)">T</span></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">極限與連續 <span class="en">Limit &amp; Continuity</span></div>
+  <div class="def-box">
+    <div class="label">極限</div>
+    <div class="formula-block">$\lim_{t \to t_0} \mathbf{r}(t) = \begin{bmatrix} \lim_{t \to t_0} x(t) \\[4pt] \lim_{t \to t_0} y(t) \\[4pt] \lim_{t \to t_0} z(t) \end{bmatrix}$</div>
+    向量函數的極限等於各分量函數的極限。
+  </div>
+  <div class="def-box">
+    <div class="label">連續</div>
+    若 \(\displaystyle\lim_{t \to t_0}\mathbf{r}(t) = \mathbf{r}(t_0)\)，則 \(\mathbf{r}(t)\) 在 \(t = t_0\) 連續。
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">向量函數的微分 <span class="en">Derivative</span></div>
+  <div class="def-box">
+    <div class="label">定義</div>
+    <div class="formula-block">$\mathbf{r}'(t) = \lim_{\Delta t \to 0}\frac{\mathbf{r}(t+\Delta t)-\mathbf{r}(t)}{\Delta t} = \begin{bmatrix} x'(t) \\ y'(t) \\ z'(t) \end{bmatrix}$</div>
+  </div>
+  <div class="prop-box">
+    <div class="label">切線向量</div>
+    \(\mathbf{r}'(t)\) 為曲線在 \(t\) 處的<strong style="color:var(--gold)">切線向量</strong>。單位切線向量：
+    <div class="formula-block">$\mathbf{T}(t) = \frac{\mathbf{r}'(t)}{\|\mathbf{r}'(t)\|}$</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">微分運算法則 <span class="en">Differentiation Rules</span></div>
+  <div class="thm-box">
+    <div class="label">運算規則</div>
+    <ul class="prop-list">
+      <li>\((\mathbf{u}+\mathbf{v})' = \mathbf{u}'+\mathbf{v}'\)</li>
+      <li>\((c\,\mathbf{u})' = c\,\mathbf{u}'\)（\(c\) 為常數）</li>
+      <li>\((f\,\mathbf{u})' = f'\mathbf{u} + f\,\mathbf{u}'\)（純量 × 向量）</li>
+      <li>\((\mathbf{u}\cdot\mathbf{v})' = \mathbf{u}'\cdot\mathbf{v} + \mathbf{u}\cdot\mathbf{v}'\)（內積）</li>
+      <li>\((\mathbf{u}\times\mathbf{v})' = \mathbf{u}'\times\mathbf{v} + \mathbf{u}\times\mathbf{v}'\)（外積，注意順序）</li>
+    </ul>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">互動工具：向量函數計算器 <span class="en">Vector Function Tool</span></div>
+  <div class="interactive-box">
+    <h4>輸入 r(t) 的分量函數，計算 r'(t)</h4>
+    <p style="color:var(--text3);font-size:13px;margin-bottom:8px">範例：x(t) = t², y(t) = t³, z(t) = eᵗ</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <label style="color:var(--text3);font-size:13px">r(t) =</label>
+      <div class="vec-input">
+        <input id="vf-x" value="t^2" placeholder="x(t)">
+        <input id="vf-y" value="t^3" placeholder="y(t)">
+        <input id="vf-z" value="e^t" placeholder="z(t)">
+      </div>
+      <label style="color:var(--text3);font-size:13px">t =</label>
+      <div class="vec-input"><input id="vf-t" value="1" style="width:50px"></div>
+      <button class="btn btn-teal" onclick="calcVecFunc()">計算</button>
+    </div>
+    <div class="result-box" id="vf-result">按「計算」查看結果</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">範例 <span class="en">Example</span></div>
+  <div class="ex-box">
+    <div class="label">EXAMPLE</div>
+    設 \(\mathbf{r}(t) = (\cos t,\sin t,t)\)，求 \(\mathbf{r}'(t)\)、\(\|\mathbf{r}'(t)\|\) 及單位切線向量 \(\mathbf{T}(t)\)。<br>
+    <strong>解</strong>：\(\mathbf{r}'(t) = (-\sin t,\cos t,1)\)<br>
+    \(\|\mathbf{r}'(t)\| = \sqrt{\sin^2 t + \cos^2 t + 1} = \sqrt{2}\)<br>
+    <div class="formula-block">$\mathbf{T}(t) = \frac{1}{\sqrt{2}}(-\sin t,\cos t,1)$</div>
+  </div>
+</div>
+</div>
+
+<!-- ==================== SEC-02 弧長 ==================== -->
+<div class="section" id="sec-02">
+<div class="section-tag">UNIT 02</div>
+<div class="section-title">弧長</div>
+<div class="section-sub">Arc Length</div>
+
+<div class="card">
+  <div class="card-title">弧長公式 <span class="en">Arc Length Formula</span></div>
+  <div class="def-box">
+    <div class="label">DEFINITION</div>
+    空間曲線 \(\mathbf{r}(t)\) 從 \(t=a\) 到 \(t=b\) 的弧長：
+    <div class="formula-block">$s = \int_a^b \|\mathbf{r}'(t)\|\,dt = \int_a^b \sqrt{x'(t)^2 + y'(t)^2 + z'(t)^2}\,dt$</div>
+  </div>
+  <div class="prop-box">
+    <div class="label">弧長微分</div>
+    <div class="formula-block">$\frac{ds}{dt} = \|\mathbf{r}'(t)\|$</div>
+    即弧長的變化率等於速度的大小（速率）。
+  </div>
+  <div style="text-align:center;margin-top:14px">
+    <canvas id="cv-arclen" width="760" height="300"></canvas>
+    <div style="font-size:11px;color:var(--text3);margin-top:4px">動畫：<span style="color:var(--green)">綠色高亮段</span>為已量測的弧長，數值即時更新</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">弧長參數化 <span class="en">Arc Length Parametrization</span></div>
+  <div class="note-box">
+    <div class="label">觀念</div>
+    若以弧長 \(s\) 為參數，則 \(\|\mathbf{r}'(s)\| = 1\)，即單位速率參數化。這在定義曲率時特別方便。
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">互動工具：弧長計算器 <span class="en">Arc Length Calculator</span></div>
+  <div class="interactive-box">
+    <h4>螺旋線弧長</h4>
+    <p style="color:var(--text3);font-size:13px;margin-bottom:8px">計算 \(\mathbf{r}(t) = (\cos t,\,\sin t,\,bt)\) 從 \(t=0\) 到 \(t=T\) 的弧長</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <label style="color:var(--text3);font-size:13px">b =</label>
+      <div class="vec-input"><input id="arc-b" value="1" style="width:50px"></div>
+      <label style="color:var(--text3);font-size:13px">T =</label>
+      <div class="vec-input"><input id="arc-T" value="6.2832" style="width:70px"></div>
+      <button class="btn btn-teal" onclick="calcArc()">計算弧長</button>
+    </div>
+    <div class="result-box" id="arc-result">按「計算弧長」查看結果</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">範例 <span class="en">Example</span></div>
+  <div class="ex-box">
+    <div class="label">EXAMPLE</div>
+    求 \(\mathbf{r}(t) = (3\cos t,3\sin t,4t)\) 從 \(t=0\) 到 \(t=2\pi\) 的弧長。<br>
+    <strong>解</strong>：\(\mathbf{r}'(t) = (-3\sin t,3\cos t,4)\)<br>
+    \(\|\mathbf{r}'(t)\| = \sqrt{9\sin^2 t + 9\cos^2 t + 16} = \sqrt{9+16} = 5\)<br>
+    <div class="formula-block">$s = \int_0^{2\pi} 5\,dt = 5t\Big|_0^{2\pi} = 10\pi$</div>
+  </div>
+</div>
+</div>
+
+<!-- ==================== SEC-03 曲率 ==================== -->
+<div class="section" id="sec-03">
+<div class="section-tag">UNIT 03</div>
+<div class="section-title">曲率</div>
+<div class="section-sub">Curvature</div>
+
+<div class="card">
+  <div class="card-title">曲率的定義 <span class="en">Curvature</span></div>
+  <div class="def-box">
+    <div class="label">DEFINITION</div>
+    曲率 \(\kappa\) 衡量曲線彎曲的程度。以弧長為參數的定義：
+    <div class="formula-block">$\kappa = \left\|\frac{d\mathbf{T}}{ds}\right\|$</div>
+  </div>
+  <div class="thm-box">
+    <div class="label">一般參數的曲率公式</div>
+    <div class="formula-block">$\kappa = \frac{\|\mathbf{r}'(t)\times\mathbf{r}''(t)\|}{\|\mathbf{r}'(t)\|^3}$</div>
+  </div>
+  <div class="prop-box">
+    <div class="label">二維曲線 y = f(x) 的曲率</div>
+    <div class="formula-block">$\kappa = \frac{|y''|}{(1+y'^2)^{3/2}}$</div>
+  </div>
+  <div class="note-box">
+    <div class="label">曲率半徑</div>
+    \(\rho = \dfrac{1}{\kappa}\) 稱為曲率半徑，表示在該點的密切圓半徑。
+  </div>
+  <div style="text-align:center;margin-top:14px">
+    <canvas id="cv-curvature" width="760" height="340"></canvas>
+    <div style="font-size:11px;color:var(--text3);margin-top:4px">動畫：<span style="color:var(--purple)">紫色圓</span>為密切圓（osculating circle），<span style="color:var(--teal)">T</span> 切線 <span style="color:var(--green)">N</span> 法向量</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">TNB 框架 <span class="en">Frenet-Serret Frame</span></div>
+  <div class="def-box">
+    <div class="label">三個基本向量</div>
+    <ul class="prop-list">
+      <li><strong style="color:var(--teal)">單位切線向量 T</strong>：\(\displaystyle\mathbf{T} = \frac{\mathbf{r}'}{\|\mathbf{r}'\|}\)</li>
+      <li><strong style="color:var(--green)">主法向量 N</strong>：\(\displaystyle\mathbf{N} = \frac{\mathbf{T}'}{\|\mathbf{T}'\|}\)（指向曲線彎曲方向）</li>
+      <li><strong style="color:var(--purple)">副法向量 B</strong>：\(\mathbf{B} = \mathbf{T}\times\mathbf{N}\)（垂直於密切平面）</li>
+    </ul>
+  </div>
+  <div class="prop-box">
+    <div class="label">撓率 TORSION</div>
+    <div class="formula-block">$\tau = -\mathbf{B}'\cdot\mathbf{N}$</div>
+    撓率衡量曲線偏離平面的程度。平面曲線的撓率為 0。
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">互動工具：曲率計算器 <span class="en">Curvature Calculator</span></div>
+  <div class="interactive-box">
+    <h4>計算 y = f(x) 在 x₀ 處的曲率</h4>
+    <p style="color:var(--text3);font-size:13px;margin-bottom:8px">使用數值微分計算 \(\kappa = |y''|/(1+y'^2)^{3/2}\)</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <label style="color:var(--text3);font-size:13px">f(x) =</label>
+      <div class="vec-input"><input id="curv-f" value="x^2" style="width:100px"></div>
+      <label style="color:var(--text3);font-size:13px">x₀ =</label>
+      <div class="vec-input"><input id="curv-x" value="1" style="width:50px"></div>
+      <button class="btn btn-teal" onclick="calcCurvature()">計算曲率</button>
+    </div>
+    <div class="result-box" id="curv-result">按「計算曲率」查看結果</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">範例 <span class="en">Example</span></div>
+  <div class="ex-box">
+    <div class="label">EXAMPLE</div>
+    求曲線 \(y = x^2\) 在 \(x=1\) 處的曲率。<br>
+    <strong>解</strong>：\(y' = 2x = 2\)（在 \(x=1\)）、\(y'' = 2\)<br>
+    <div class="formula-block">$\kappa = \frac{|y''|}{(1+y'^2)^{3/2}} = \frac{2}{(1+4)^{3/2}} = \frac{2}{5\sqrt{5}} \approx 0.1789$</div>
+  </div>
+</div>
+</div>
+
+<!-- ==================== SEC-04 梯度與方向導數 ==================== -->
+<div class="section" id="sec-04">
+<div class="section-tag">UNIT 04</div>
+<div class="section-title">梯度與方向導數</div>
+<div class="section-sub">Gradient &amp; Directional Derivative</div>
+
+<div class="card">
+  <div class="card-title">梯度 <span class="en">Gradient</span></div>
+  <div class="def-box">
+    <div class="label">DEFINITION</div>
+    純量場 \(f(x,y,z)\) 的梯度：
+    <div class="formula-block">$\nabla f = \frac{\partial f}{\partial x}\,\mathbf{i} + \frac{\partial f}{\partial y}\,\mathbf{j} + \frac{\partial f}{\partial z}\,\mathbf{k}$</div>
+  </div>
+  <div class="prop-box">
+    <div class="label">梯度的幾何意義</div>
+    <ul class="prop-list">
+      <li>\(\nabla f\) 指向 \(f\) 增長最快的方向</li>
+      <li>\(\|\nabla f\|\) 等於最大方向導數</li>
+      <li>\(\nabla f\) 垂直於等值面 \(f(x,y,z)=c\)</li>
+    </ul>
+  </div>
+  <div style="text-align:center;margin-top:14px">
+    <canvas id="cv-gradient" width="760" height="380"></canvas>
+    <div style="font-size:11px;color:var(--text3);margin-top:4px">圖示：f(x,y)=x²+y² 的<span style="color:var(--text2)">等高線</span>與<span style="color:var(--gold)">梯度向量場 ∇f</span>（箭頭垂直於等高線，指向增長方向）</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">方向導數 <span class="en">Directional Derivative</span></div>
+  <div class="def-box">
+    <div class="label">DEFINITION</div>
+    函數 \(f\) 沿單位向量 \(\mathbf{u}\) 方向的方向導數：
+    <div class="formula-block">$D_{\mathbf{u}}f = \nabla f \cdot \mathbf{u} = \|\nabla f\|\cos\theta$</div>
+    其中 \(\theta\) 是 \(\nabla f\) 與 \(\mathbf{u}\) 的夾角。
+  </div>
+  <div class="note-box">
+    <div class="label">觀察</div>
+    當 \(\theta=0\)（沿梯度方向），方向導數最大 = \(\|\nabla f\|\)。<br>
+    當 \(\theta=\pi\)（逆梯度方向），方向導數最小 = \(-\|\nabla f\|\)。<br>
+    當 \(\theta=\pi/2\)（沿等值面），方向導數 = 0。
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">互動工具：梯度計算器 <span class="en">Gradient Tool</span></div>
+  <div class="interactive-box">
+    <h4>計算 f(x,y) 的梯度與方向導數</h4>
+    <p style="color:var(--text3);font-size:13px;margin-bottom:8px">以數值微分計算 \(\nabla f\) 與 \(D_{\mathbf{u}}f\)</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px">
+      <label style="color:var(--text3);font-size:13px">f(x,y) =</label>
+      <div class="vec-input"><input id="grad-f" value="x^2+y^2" style="width:120px"></div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px">
+      <label style="color:var(--text3);font-size:13px">點 (x₀, y₀) =</label>
+      <div class="vec-input">
+        <input id="grad-x" value="1" style="width:50px">
+        <input id="grad-y" value="2" style="width:50px">
+      </div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <label style="color:var(--text3);font-size:13px">方向 u = (a, b)</label>
+      <div class="vec-input">
+        <input id="grad-ua" value="1" style="width:50px">
+        <input id="grad-ub" value="1" style="width:50px">
+      </div>
+      <button class="btn btn-teal" onclick="calcGrad()">計算</button>
+    </div>
+    <div class="result-box" id="grad-result">按「計算」查看結果</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">範例 <span class="en">Example</span></div>
+  <div class="ex-box">
+    <div class="label">EXAMPLE</div>
+    設 \(f(x,y) = x^2 y + y^3\)，求 \(\nabla f\) 在 \((1,2)\) 處的值，以及沿方向 \(\mathbf{u} = (3/5, 4/5)\) 的方向導數。<br>
+    <strong>解</strong>：\(\nabla f = (2xy, x^2+3y^2)\)<br>
+    在 \((1,2)\)：\(\nabla f(1,2) = (4, 13)\)<br>
+    <div class="formula-block">$D_{\mathbf{u}}f = (4, 13)\cdot\left(\frac{3}{5},\frac{4}{5}\right) = \frac{12}{5} + \frac{52}{5} = \frac{64}{5} = 12.8$</div>
+  </div>
+</div>
+</div>
+
+<!-- ==================== SEC-05 散度 ==================== -->
+<div class="section" id="sec-05">
+<div class="section-tag">UNIT 05</div>
+<div class="section-title">散度</div>
+<div class="section-sub">Divergence</div>
+
+<div class="card">
+  <div class="card-title">散度的定義 <span class="en">Divergence</span></div>
+  <div class="def-box">
+    <div class="label">DEFINITION</div>
+    向量場 \(\mathbf{F} = F_1\,\mathbf{i}+F_2\,\mathbf{j}+F_3\,\mathbf{k}\) 的散度：
+    <div class="formula-block">$\text{div}\,\mathbf{F} = \nabla\cdot\mathbf{F} = \frac{\partial F_1}{\partial x}+\frac{\partial F_2}{\partial y}+\frac{\partial F_3}{\partial z}$</div>
+  </div>
+  <div class="note-box">
+    <div class="label">散度是純量</div>
+    散度的結果是純量，不是向量。它衡量向量場在某點「發散」或「匯聚」的程度。
+  </div>
+  <div style="text-align:center;margin-top:14px">
+    <canvas id="cv-div" width="760" height="300"></canvas>
+    <div style="font-size:11px;color:var(--text3);margin-top:4px">動畫：左 — <span style="color:var(--red)">源（div>0，粒子向外擴散）</span>；右 — <span style="color:var(--blue)">匯（div<0，粒子向內匯聚）</span></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">物理意義 <span class="en">Physical Interpretation</span></div>
+  <div class="prop-box">
+    <div class="label">流量密度</div>
+    散度可視為單位體積的淨流出量：
+    <div class="formula-block">$\nabla\cdot\mathbf{F} = \lim_{\Delta V\to 0}\frac{1}{\Delta V}\oint_S \mathbf{F}\cdot\mathbf{n}\,dA$</div>
+    <ul class="prop-list">
+      <li>\(\nabla\cdot\mathbf{F} > 0\)：該點為<strong style="color:var(--red)">源（source）</strong>，流體向外擴散</li>
+      <li>\(\nabla\cdot\mathbf{F} < 0\)：該點為<strong style="color:var(--blue)">匯（sink）</strong>，流體向內匯聚</li>
+      <li>\(\nabla\cdot\mathbf{F} = 0\)：<strong style="color:var(--green)">不可壓縮（solenoidal）</strong></li>
+    </ul>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">互動工具：散度計算器 <span class="en">Divergence Calculator</span></div>
+  <div class="interactive-box">
+    <h4>計算 F(x,y,z) 在指定點的散度</h4>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px">
+      <label style="color:var(--text3);font-size:13px">F₁ =</label>
+      <div class="vec-input"><input id="div-f1" value="x^2" style="width:80px"></div>
+      <label style="color:var(--text3);font-size:13px">F₂ =</label>
+      <div class="vec-input"><input id="div-f2" value="y^2" style="width:80px"></div>
+      <label style="color:var(--text3);font-size:13px">F₃ =</label>
+      <div class="vec-input"><input id="div-f3" value="z^2" style="width:80px"></div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <label style="color:var(--text3);font-size:13px">點 (x,y,z) =</label>
+      <div class="vec-input">
+        <input id="div-x" value="1" style="width:50px">
+        <input id="div-y" value="1" style="width:50px">
+        <input id="div-z" value="1" style="width:50px">
+      </div>
+      <button class="btn btn-teal" onclick="calcDiv()">計算散度</button>
+    </div>
+    <div class="result-box" id="div-result">按「計算散度」查看結果</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">範例 <span class="en">Example</span></div>
+  <div class="ex-box">
+    <div class="label">EXAMPLE</div>
+    設 \(\mathbf{F} = (x^2 y, xyz, z^2)\)，求 \(\nabla\cdot\mathbf{F}\) 在 \((1,2,3)\) 處的值。<br>
+    <strong>解</strong>：\(\nabla\cdot\mathbf{F} = \frac{\partial(x^2 y)}{\partial x} + \frac{\partial(xyz)}{\partial y} + \frac{\partial(z^2)}{\partial z} = 2xy + xz + 2z\)<br>
+    在 \((1,2,3)\)：\(\nabla\cdot\mathbf{F}(1,2,3) = 2(1)(2) + (1)(3) + 2(3) = 4 + 3 + 6 = 13\)
+  </div>
+</div>
+</div>
+
+<!-- ==================== SEC-06 旋度 ==================== -->
+<div class="section" id="sec-06">
+<div class="section-tag">UNIT 06</div>
+<div class="section-title">旋度</div>
+<div class="section-sub">Curl</div>
+
+<div class="card">
+  <div class="card-title">旋度的定義 <span class="en">Curl</span></div>
+  <div class="def-box">
+    <div class="label">DEFINITION</div>
+    向量場 \(\mathbf{F} = F_1\,\mathbf{i}+F_2\,\mathbf{j}+F_3\,\mathbf{k}\) 的旋度：
+    <div class="formula-block">$\text{curl}\,\mathbf{F} = \nabla\times\mathbf{F} = \begin{vmatrix} \mathbf{i} & \mathbf{j} & \mathbf{k} \\[4pt] \frac{\partial}{\partial x} & \frac{\partial}{\partial y} & \frac{\partial}{\partial z} \\[4pt] F_1 & F_2 & F_3 \end{vmatrix}$</div>
+  </div>
+  <div class="thm-box">
+    <div class="label">展開式</div>
+    <div class="formula-block">$\nabla\times\mathbf{F} = \left(\frac{\partial F_3}{\partial y}-\frac{\partial F_2}{\partial z}\right)\mathbf{i} + \left(\frac{\partial F_1}{\partial z}-\frac{\partial F_3}{\partial x}\right)\mathbf{j} + \left(\frac{\partial F_2}{\partial x}-\frac{\partial F_1}{\partial y}\right)\mathbf{k}$</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">物理意義與性質 <span class="en">Physical Meaning</span></div>
+  <div class="prop-box">
+    <div class="label">旋轉</div>
+    旋度衡量向量場在某點的旋轉趨勢。\(\nabla\times\mathbf{F}\) 的方向為旋轉軸，大小為旋轉強度。
+  </div>
+  <div style="text-align:center;margin-top:14px">
+    <canvas id="cv-curl" width="760" height="300"></canvas>
+    <div style="font-size:11px;color:var(--text3);margin-top:4px">動畫：左 — <span style="color:var(--purple)">旋轉流場 F=(-y,x)，curl≠0</span>；右 — <span style="color:var(--green)">無旋場 F=(x,y)，curl=0</span></div>
+  </div>
+  <div class="thm-box">
+    <div class="label">重要恆等式</div>
+    <ul class="prop-list">
+      <li>\(\nabla\times(\nabla f) = \mathbf{0}\)（梯度的旋度恆為零）</li>
+      <li>\(\nabla\cdot(\nabla\times\mathbf{F}) = 0\)（旋度的散度恆為零）</li>
+    </ul>
+  </div>
+  <div class="note-box">
+    <div class="label">無旋場（Irrotational Field）</div>
+    若 \(\nabla\times\mathbf{F}=\mathbf{0}\)，則 \(\mathbf{F}\) 為無旋場（保守場）。此時存在位勢函數 \(\phi\) 使得 \(\mathbf{F}=\nabla\phi\)。
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">互動工具：旋度計算器 <span class="en">Curl Calculator</span></div>
+  <div class="interactive-box">
+    <h4>計算 F(x,y,z) 在指定點的旋度</h4>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px">
+      <label style="color:var(--text3);font-size:13px">F₁ =</label>
+      <div class="vec-input"><input id="curl-f1" value="y*z" style="width:80px"></div>
+      <label style="color:var(--text3);font-size:13px">F₂ =</label>
+      <div class="vec-input"><input id="curl-f2" value="x*z" style="width:80px"></div>
+      <label style="color:var(--text3);font-size:13px">F₃ =</label>
+      <div class="vec-input"><input id="curl-f3" value="x*y" style="width:80px"></div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <label style="color:var(--text3);font-size:13px">點 (x,y,z) =</label>
+      <div class="vec-input">
+        <input id="curl-x" value="1" style="width:50px">
+        <input id="curl-y" value="1" style="width:50px">
+        <input id="curl-z" value="1" style="width:50px">
+      </div>
+      <button class="btn btn-teal" onclick="calcCurl()">計算旋度</button>
+    </div>
+    <div class="result-box" id="curl-result">按「計算旋度」查看結果</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">範例 <span class="en">Example</span></div>
+  <div class="ex-box">
+    <div class="label">EXAMPLE</div>
+    設 \(\mathbf{F} = (yz, xz, xy)\)，求 \(\nabla\times\mathbf{F}\)。<br>
+    <strong>解</strong>：<br>
+    <div class="formula-block">$\nabla\times\mathbf{F} = \begin{vmatrix} \mathbf{i} & \mathbf{j} & \mathbf{k} \\ \frac{\partial}{\partial x} & \frac{\partial}{\partial y} & \frac{\partial}{\partial z} \\ yz & xz & xy \end{vmatrix}$</div>
+    \(= \left(\frac{\partial(xy)}{\partial y} - \frac{\partial(xz)}{\partial z}\right)\mathbf{i} + \left(\frac{\partial(yz)}{\partial z} - \frac{\partial(xy)}{\partial x}\right)\mathbf{j} + \left(\frac{\partial(xz)}{\partial x} - \frac{\partial(yz)}{\partial y}\right)\mathbf{k}\)<br>
+    \(= (x-x)\mathbf{i} + (y-y)\mathbf{j} + (z-z)\mathbf{k} = \mathbf{0}\)<br>
+    所以 \(\mathbf{F}\) 是無旋場（保守場）。
+  </div>
+</div>
+</div>
+
+<!-- ==================== SEC-07 線積分 ==================== -->
+<div class="section" id="sec-07">
+<div class="section-tag">UNIT 07</div>
+<div class="section-title">線積分</div>
+<div class="section-sub">Line Integral</div>
+
+<div class="card">
+  <div class="card-title">線積分的定義 <span class="en">Line Integral</span></div>
+  <div class="def-box">
+    <div class="label">純量場的線積分</div>
+    函數 \(f\) 沿曲線 \(C\) 的線積分：
+    <div class="formula-block">$\int_C f\,ds = \int_a^b f(\mathbf{r}(t))\,\|\mathbf{r}'(t)\|\,dt$</div>
+  </div>
+  <div class="def-box">
+    <div class="label">向量場的線積分（做功）</div>
+    向量場 \(\mathbf{F}\) 沿曲線 \(C\) 的線積分：
+    <div class="formula-block">$\int_C \mathbf{F}\cdot d\mathbf{r} = \int_a^b \mathbf{F}(\mathbf{r}(t))\cdot\mathbf{r}'(t)\,dt$</div>
+    幾何意義：力場 \(\mathbf{F}\) 沿路徑 \(C\) 所做的功。
+  </div>
+  <div style="text-align:center;margin-top:14px">
+    <canvas id="cv-lineint" width="760" height="340"></canvas>
+    <div style="font-size:11px;color:var(--text3);margin-top:4px">動畫：<span style="color:var(--gold)">向量場 F</span> 沿<span style="color:var(--teal)">曲線 C</span> 做功，<span style="color:var(--green)">綠色</span>=正功 <span style="color:var(--red)">紅色</span>=負功</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">分量形式 <span class="en">Component Form</span></div>
+  <div class="thm-box">
+    <div class="label">展開</div>
+    若 \(\mathbf{F}=P\,\mathbf{i}+Q\,\mathbf{j}+R\,\mathbf{k}\)，則
+    <div class="formula-block">$\int_C \mathbf{F}\cdot d\mathbf{r} = \int_C P\,dx + Q\,dy + R\,dz$</div>
+  </div>
+  <div class="prop-box">
+    <div class="label">基本性質</div>
+    <ul class="prop-list">
+      <li>反轉路徑方向：\(\displaystyle\int_{-C}\mathbf{F}\cdot d\mathbf{r} = -\int_C \mathbf{F}\cdot d\mathbf{r}\)</li>
+      <li>路徑相加：\(\displaystyle\int_{C_1+C_2}\mathbf{F}\cdot d\mathbf{r} = \int_{C_1}\mathbf{F}\cdot d\mathbf{r}+\int_{C_2}\mathbf{F}\cdot d\mathbf{r}\)</li>
+    </ul>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">範例 <span class="en">Example</span></div>
+  <div class="ex-box">
+    <div class="label">EXAMPLE</div>
+    計算 \(\displaystyle\int_C \mathbf{F}\cdot d\mathbf{r}\)，其中 \(\mathbf{F} = (y^2, 2xy)\)，\(C\) 為路徑 \(\mathbf{r}(t) = (t, t^2)\)，\(t\in[0,1]\)。<br>
+    <strong>解</strong>：\(\mathbf{r}'(t) = (1, 2t)\)<br>
+    \(\mathbf{F}(\mathbf{r}(t)) = ((t^2)^2, 2t\cdot t^2) = (t^4, 2t^3)\)<br>
+    \(\mathbf{F}\cdot\mathbf{r}' = t^4 \cdot 1 + 2t^3 \cdot 2t = t^4 + 4t^4 = 5t^4\)<br>
+    <div class="formula-block">$\int_C \mathbf{F}\cdot d\mathbf{r} = \int_0^1 5t^4\,dt = \left[t^5\right]_0^1 = 1$</div>
+  </div>
+</div>
+</div>
+
+<!-- ==================== SEC-08 路徑獨立性 ==================== -->
+<div class="section" id="sec-08">
+<div class="section-tag">UNIT 08</div>
+<div class="section-title">路徑獨立性</div>
+<div class="section-sub">Path Independence &amp; Conservative Fields</div>
+
+<div class="card">
+  <div class="card-title">路徑獨立性 <span class="en">Path Independence</span></div>
+  <div class="def-box">
+    <div class="label">DEFINITION</div>
+    若 \(\displaystyle\int_C \mathbf{F}\cdot d\mathbf{r}\) 只和起點與終點有關，與路徑無關，則稱線積分<strong style="color:var(--gold)">與路徑無關（path independent）</strong>。
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">保守場 <span class="en">Conservative Field</span></div>
+  <div class="thm-box">
+    <div class="label">等價條件（在單連通區域）</div>
+    以下條件等價：
+    <ul class="prop-list">
+      <li>\(\mathbf{F}\) 為<strong style="color:var(--gold)">保守場</strong>（conservative field）</li>
+      <li>存在位勢函數 \(\phi\) 使得 \(\mathbf{F} = \nabla\phi\)</li>
+      <li>\(\displaystyle\oint_C \mathbf{F}\cdot d\mathbf{r} = 0\) 對任意封閉曲線 \(C\)</li>
+      <li>\(\nabla\times\mathbf{F} = \mathbf{0}\)</li>
+      <li>\(\displaystyle\int_C \mathbf{F}\cdot d\mathbf{r}\) 與路徑無關</li>
+    </ul>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">位勢函數的求法 <span class="en">Finding Potential Function</span></div>
+  <div class="prop-box">
+    <div class="label">方法</div>
+    若 \(\mathbf{F}=(P,Q,R)\) 為保守場，求 \(\phi\) 使得 \(\nabla\phi = \mathbf{F}\)：
+    <ul class="prop-list">
+      <li>步驟 1：由 \(\partial\phi/\partial x = P\)，對 \(x\) 積分得 \(\phi = \int P\,dx + g(y,z)\)</li>
+      <li>步驟 2：由 \(\partial\phi/\partial y = Q\)，求出 \(g(y,z)\)</li>
+      <li>步驟 3：由 \(\partial\phi/\partial z = R\)，確認或求出剩餘未知</li>
+    </ul>
+  </div>
+  <div class="thm-box">
+    <div class="label">微積分基本定理（線積分版）</div>
+    <div class="formula-block">$\int_C \nabla\phi\cdot d\mathbf{r} = \phi(B) - \phi(A)$</div>
+    其中 \(A, B\) 分別為路徑的起點與終點。
+  </div>
+  <div style="text-align:center;margin-top:14px">
+    <canvas id="cv-pathind" width="760" height="340"></canvas>
+    <div style="font-size:11px;color:var(--text3);margin-top:4px">動畫：<span style="color:var(--green)">路徑一</span>與<span style="color:var(--purple)">路徑二</span>的線積分結果相同 — 保守場的路徑獨立性</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">範例 <span class="en">Example</span></div>
+  <div class="ex-box">
+    <div class="label">EXAMPLE</div>
+    驗證 \(\mathbf{F} = (2xy+z, x^2, x)\) 是保守場，並求其位勢函數 \(\phi\)。<br>
+    <strong>解</strong>：檢驗 \(\nabla\times\mathbf{F} = \mathbf{0}\)：<br>
+    \(\displaystyle\frac{\partial R}{\partial y} - \frac{\partial Q}{\partial z} = 0 - 0 = 0\)，\(\displaystyle\frac{\partial P}{\partial z} - \frac{\partial R}{\partial x} = 1 - 1 = 0\)，\(\displaystyle\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y} = 2x - 2x = 0\)<br>
+    所以 \(\mathbf{F}\) 是保守場。求 \(\phi\)：由 \(\displaystyle\frac{\partial\phi}{\partial x} = 2xy+z\)，積分得 \(\phi = x^2 y + xz + g(y,z)\)。<br>
+    由 \(\displaystyle\frac{\partial\phi}{\partial y} = x^2 + g'(y,z) = x^2\) 得 \(g' = 0\)，故 \(g = h(z)\)。<br>
+    由 \(\displaystyle\frac{\partial\phi}{\partial z} = x + h'(z) = x\) 得 \(h' = 0\)，故 \(h = C\)。<br>
+    因此 \(\phi = x^2 y + xz + C\)。
+  </div>
+</div>
+</div>
+
+<!-- ==================== SEC-09 Green 定理 ==================== -->
+<div class="section" id="sec-09">
+<div class="section-tag">UNIT 09</div>
+<div class="section-title">Green 定理</div>
+<div class="section-sub">Green's Theorem</div>
+
+<div class="card">
+  <div class="card-title">Green 定理 <span class="en">Green's Theorem</span></div>
+  <div class="thm-box">
+    <div class="label">THEOREM</div>
+    設 \(D\) 為 \(xy\)-平面上的封閉區域，\(C\) 為其正向（逆時針）邊界曲線，\(P, Q\) 在 \(D\) 上有連續偏導數，則：
+    <div class="formula-block">$\oint_C P\,dx + Q\,dy = \iint_D \left(\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y}\right)dA$</div>
+  </div>
+  <div class="note-box">
+    <div class="label">理解方式</div>
+    Green 定理將<strong style="color:var(--teal)">封閉曲線上的線積分</strong>轉換為<strong style="color:var(--gold)">區域上的二重積分</strong>。左邊是邊界上的循環，右邊是區域內旋度的 \(z\)-分量的面積分。
+  </div>
+  <div style="text-align:center;margin-top:14px">
+    <canvas id="cv-green" width="760" height="340"></canvas>
+    <div style="font-size:11px;color:var(--text3);margin-top:4px">動畫：<span style="color:var(--teal)">邊界 C 上的線積分（循環箭頭）</span> = <span style="color:var(--gold)">區域 D 內的面積分（旋度）</span></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">Green 定理的向量形式 <span class="en">Vector Form</span></div>
+  <div class="grid-2">
+    <div class="type-card">
+      <div class="name" style="color:var(--teal)">環量形式</div>
+      <div class="en">Circulation Form</div>
+      <div style="margin-top:8px;font-size:14px;color:var(--text2)">\(\displaystyle\oint_C \mathbf{F}\cdot d\mathbf{r} = \iint_D (\nabla\times\mathbf{F})\cdot\mathbf{k}\,dA\)</div>
+    </div>
+    <div class="type-card">
+      <div class="name" style="color:var(--gold)">通量形式</div>
+      <div class="en">Flux Form</div>
+      <div style="margin-top:8px;font-size:14px;color:var(--text2)">\(\displaystyle\oint_C \mathbf{F}\cdot\mathbf{n}\,ds = \iint_D \nabla\cdot\mathbf{F}\,dA\)</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">面積公式 <span class="en">Area Formula</span></div>
+  <div class="prop-box">
+    <div class="label">利用 Green 定理求面積</div>
+    令 \(P=-y, Q=x\)，則 \(\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}=2\)：
+    <div class="formula-block">$A = \frac{1}{2}\oint_C x\,dy - y\,dx$</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">奇異點的處理 <span class="en">Singular Points</span></div>
+  <div class="note-box">
+    <div class="label">注意</div>
+    若 \(\mathbf{F}\) 在封閉區域 \(D\) 內有<strong style="color:var(--red)">奇異點</strong>（如 \(\mathbf{F}=\frac{-y\,\mathbf{i}+x\,\mathbf{j}}{x^2+y^2}\) 在原點不連續），則不能直接用 Green 定理。<br><br>
+    解決方法：在奇異點周圍挖一個小圓 \(C_\epsilon\)，在環形區域 \(D'\) 上使用 Green 定理：
+    <div class="formula-block">$\oint_{C}\mathbf{F}\cdot d\mathbf{r} - \oint_{C_\epsilon}\mathbf{F}\cdot d\mathbf{r} = \iint_{D'}\left(\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}\right)dA$</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">範例 <span class="en">Example</span></div>
+  <div class="ex-box">
+    <div class="label">EXAMPLE</div>
+    使用 Green 定理計算 \(\displaystyle\oint_C (x^2 y\,dx + xy^2\,dy)\)，其中 \(C\) 為單位圓。<br>
+    <strong>解</strong>：\(\displaystyle\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y} = y^2 - x^2\)<br>
+    利用 Green 定理：
+    <div class="formula-block">$\oint_C (x^2 y\,dx + xy^2\,dy) = \iint_D (y^2 - x^2)\,dA$</div>
+    在極坐標：\(\displaystyle\int_0^{2\pi}\int_0^1 (r^2\sin^2\theta - r^2\cos^2\theta)\,r\,dr\,d\theta = \int_0^{2\pi}\int_0^1 -r^3\cos(2\theta)\,dr\,d\theta\)<br>
+    \(= -\displaystyle\frac{1}{4}\int_0^{2\pi}\cos(2\theta)\,d\theta = 0\)
+  </div>
+</div>
+</div>
+
+<!-- ==================== SEC-10 面積分 ==================== -->
+<div class="section" id="sec-10">
+<div class="section-tag">UNIT 10</div>
+<div class="section-title">面積分</div>
+<div class="section-sub">Surface Integral</div>
+
+<div class="card">
+  <div class="card-title">曲面的參數化 <span class="en">Surface Parametrization</span></div>
+  <div class="def-box">
+    <div class="label">DEFINITION</div>
+    曲面 \(S\) 可用兩個參數 \(u, v\) 描述：
+    <div class="formula-block">$\mathbf{r}(u,v) = x(u,v)\,\mathbf{i} + y(u,v)\,\mathbf{j} + z(u,v)\,\mathbf{k}$</div>
+    曲面的法向量：
+    <div class="formula-block">$\mathbf{n} = \mathbf{r}_u \times \mathbf{r}_v$</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">純量場的面積分 <span class="en">Scalar Surface Integral</span></div>
+  <div class="def-box">
+    <div class="label">DEFINITION</div>
+    <div class="formula-block">$\iint_S f\,dA = \iint_D f(\mathbf{r}(u,v))\,\|\mathbf{r}_u\times\mathbf{r}_v\|\,du\,dv$</div>
+    特別地，若曲面由 \(z=g(x,y)\) 給定：
+    <div class="formula-block">$\iint_S f\,dA = \iint_D f(x,y,g(x,y))\,\sqrt{1+g_x^2+g_y^2}\,dx\,dy$</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">向量場的面積分（通量） <span class="en">Flux Integral</span></div>
+  <div class="def-box">
+    <div class="label">DEFINITION</div>
+    向量場 \(\mathbf{F}\) 通過曲面 \(S\) 的通量：
+    <div class="formula-block">$\iint_S \mathbf{F}\cdot\hat{\mathbf{n}}\,dA = \iint_S \mathbf{F}\cdot d\mathbf{S} = \iint_D \mathbf{F}\cdot(\mathbf{r}_u\times\mathbf{r}_v)\,du\,dv$</div>
+  </div>
+  <div class="prop-box">
+    <div class="label">z = g(x,y) 的情況</div>
+    若曲面由 \(z=g(x,y)\) 給定，\(\mathbf{F}=(P,Q,R)\)，選取向上法向量：
+    <div class="formula-block">$\iint_S \mathbf{F}\cdot\hat{\mathbf{n}}\,dA = \iint_D \left(-Pg_x - Qg_y + R\right)dx\,dy$</div>
+  </div>
+  <div style="text-align:center;margin-top:14px">
+    <canvas id="cv-surfint" width="760" height="340"></canvas>
+    <div style="font-size:11px;color:var(--text3);margin-top:4px">動畫：曲面 S 上的法向量 <span style="color:var(--gold)">n̂</span> 與面積元素 dS</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">範例 <span class="en">Example</span></div>
+  <div class="ex-box">
+    <div class="label">EXAMPLE</div>
+    求 \(\mathbf{F} = (0, 0, z)\) 通過半球面 \(z = \sqrt{1-x^2-y^2}\)（指向上方）的通量。<br>
+    <strong>解</strong>：對於 \(z = g(x,y) = \sqrt{1-x^2-y^2}\)，向上法向量為 \((-g_x, -g_y, 1)\)。<br>
+    \(\mathbf{F}\cdot(-g_x, -g_y, 1) = z = \sqrt{1-x^2-y^2}\)<br>
+    <div class="formula-block">$\iint_S \mathbf{F}\cdot\hat{\mathbf{n}}\,dA = \iint_D \sqrt{1-x^2-y^2}\,dx\,dy$</div>
+    在極坐標：\(\displaystyle\int_0^{2\pi}\int_0^1 \sqrt{1-r^2}\cdot r\,dr\,d\theta = 2\pi\int_0^1 r\sqrt{1-r^2}\,dr = 2\pi\left[-\frac{1}{3}(1-r^2)^{3/2}\right]_0^1 = \frac{2\pi}{3}\)
+  </div>
+</div>
+</div>
+
+<!-- ==================== SEC-11 散度定理 ==================== -->
+<div class="section" id="sec-11">
+<div class="section-tag">UNIT 11</div>
+<div class="section-title">散度定理</div>
+<div class="section-sub">Divergence Theorem (Gauss)</div>
+
+<div class="card">
+  <div class="card-title">散度定理 <span class="en">Divergence Theorem</span></div>
+  <div class="thm-box">
+    <div class="label">THEOREM</div>
+    設 \(V\) 為空間中的封閉區域，\(S\) 為其邊界曲面（取向外法向量），\(\mathbf{F}\) 在 \(V\) 上有連續偏導數，則：
+    <div class="formula-block">$\oiint_S \mathbf{F}\cdot\hat{\mathbf{n}}\,dA = \iiint_V \nabla\cdot\mathbf{F}\,dV$</div>
+  </div>
+  <div class="note-box">
+    <div class="label">理解方式</div>
+    散度定理將<strong style="color:var(--teal)">封閉曲面上的通量</strong>轉換為<strong style="color:var(--gold)">體積內散度的三重積分</strong>。物理意義：流出封閉曲面的淨通量 = 內部所有源的總和。
+  </div>
+  <div style="text-align:center;margin-top:14px">
+    <canvas id="cv-divthm" width="760" height="340"></canvas>
+    <div style="font-size:11px;color:var(--text3);margin-top:4px">動畫：封閉曲面的<span style="color:var(--teal)">向外通量</span> = 內部<span style="color:var(--gold)">散度的體積分</span></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">應用範例 <span class="en">Applications</span></div>
+  <div class="ex-box">
+    <div class="label">EXAMPLE — 球面</div>
+    設 \(\mathbf{F}=(x,y,z)\)，\(S\) 為半徑 \(a\) 的球面。<br>
+    <strong>解</strong>：\(\nabla\cdot\mathbf{F} = 1+1+1 = 3\)<br>
+    <div class="formula-block">$\oiint_S \mathbf{F}\cdot\hat{\mathbf{n}}\,dA = \iiint_V 3\,dV = 3\cdot\frac{4}{3}\pi a^3 = 4\pi a^3$</div>
+  </div>
+  <div class="ex-box">
+    <div class="label">EXAMPLE — 圓柱面</div>
+    設 \(\mathbf{F}=(x^2,y^2,z^2)\)，\(V\) 為 \(x^2+y^2\le a^2,\,0\le z\le h\) 的圓柱。<br>
+    <strong>解</strong>：\(\nabla\cdot\mathbf{F} = 2x+2y+2z\)<br>
+    利用對稱性，\(\iiint_V 2x\,dV = 0\)，\(\iiint_V 2y\,dV = 0\)。<br>
+    <div class="formula-block">$\oiint_S \mathbf{F}\cdot\hat{\mathbf{n}}\,dA = \iiint_V 2z\,dV = \int_0^{2\pi}\int_0^a\int_0^h 2z\,r\,dz\,dr\,d\theta = \pi a^2 h^2$</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">互動工具：散度定理驗證 <span class="en">Divergence Theorem Tool</span></div>
+  <div class="interactive-box">
+    <h4>球面驗證：F = (x, y, z)</h4>
+    <p style="color:var(--text3);font-size:13px;margin-bottom:8px">驗證 \(\mathbf{F}=(x,y,z)\) 通過半徑 \(a\) 球面的通量 = \(4\pi a^3\)</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <label style="color:var(--text3);font-size:13px">半徑 a =</label>
+      <div class="vec-input"><input id="divthm-a" value="2" style="width:50px"></div>
+      <button class="btn btn-teal" onclick="calcDivThm()">驗證</button>
+    </div>
+    <div class="result-box" id="divthm-result">按「驗證」查看結果</div>
+  </div>
+</div>
+</div>
+
+<!-- ==================== SEC-12 Stokes 定理 ==================== -->
+<div class="section" id="sec-12">
+<div class="section-tag">UNIT 12</div>
+<div class="section-title">Stokes 定理</div>
+<div class="section-sub">Stokes' Theorem</div>
+
+<div class="card">
+  <div class="card-title">Stokes 定理 <span class="en">Stokes' Theorem</span></div>
+  <div class="thm-box">
+    <div class="label">THEOREM</div>
+    設 \(S\) 為以曲線 \(C\) 為邊界的有向曲面，\(\mathbf{F}\) 在 \(S\) 上有連續偏導數，則：
+    <div class="formula-block">$\oint_C \mathbf{F}\cdot d\mathbf{r} = \iint_S (\nabla\times\mathbf{F})\cdot\hat{\mathbf{n}}\,dA$</div>
+  </div>
+  <div class="note-box">
+    <div class="label">理解方式</div>
+    Stokes 定理將<strong style="color:var(--teal)">邊界曲線上的環量</strong>轉換為<strong style="color:var(--gold)">曲面上旋度的通量</strong>。右手定則決定 \(C\) 與 \(\hat{\mathbf{n}}\) 的方向關係。
+  </div>
+  <div style="text-align:center;margin-top:14px">
+    <canvas id="cv-stokes" width="760" height="340"></canvas>
+    <div style="font-size:11px;color:var(--text3);margin-top:4px">動畫：邊界 C 上的<span style="color:var(--teal)">環量</span> = 曲面 S 上的<span style="color:var(--gold)">旋度通量</span></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">Green 定理是 Stokes 定理的特例 <span class="en">Special Case</span></div>
+  <div class="prop-box">
+    <div class="label">關係</div>
+    當曲面 \(S\) 為 \(xy\)-平面上的區域 \(D\)（即 \(\hat{\mathbf{n}}=\mathbf{k}\)）時，Stokes 定理化簡為：
+    <div class="formula-block">$\oint_C P\,dx+Q\,dy = \iint_D \left(\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}\right)dA$</div>
+    即 Green 定理。
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">三大定理的統一觀點 <span class="en">Unified View</span></div>
+  <div class="note-box">
+    <div class="label">廣義 Stokes 定理</div>
+    Green 定理、Stokes 定理、散度定理都是<strong style="color:var(--gold)">廣義 Stokes 定理</strong>的特例，統一形式為：
+    <div class="formula-block">$\int_{\partial\Omega}\omega = \int_\Omega d\omega$</div>
+    邊界上的積分 = 內部微分形式的積分。
+  </div>
+  <div class="grid-2" style="margin-top:12px">
+    <div class="type-card">
+      <div class="name" style="color:var(--green)">Green 定理</div>
+      <div class="en">2D: 線→面</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--text3)">\(\oint_C \to \iint_D\)</div>
+    </div>
+    <div class="type-card">
+      <div class="name" style="color:var(--teal)">Stokes 定理</div>
+      <div class="en">3D: 線→面</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--text3)">\(\oint_C \to \iint_S\)</div>
+    </div>
+    <div class="type-card">
+      <div class="name" style="color:var(--purple)">散度定理</div>
+      <div class="en">3D: 面→體</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--text3)">\(\oiint_S \to \iiint_V\)</div>
+    </div>
+    <div class="type-card">
+      <div class="name" style="color:var(--gold)">微積分基本定理</div>
+      <div class="en">1D: 點→線</div>
+      <div style="margin-top:6px;font-size:13px;color:var(--text3)">\(F(b)-F(a) = \int_a^b f\,dx\)</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">應用範例 <span class="en">Example</span></div>
+  <div class="ex-box">
+    <div class="label">EXAMPLE</div>
+    設 \(\mathbf{F}=(y,-x,z^2)\)，\(S\) 為拋物面 \(z=1-x^2-y^2\)（\(z\ge 0\)）的上方，\(C\) 為其邊界 \(x^2+y^2=1, z=0\)。<br><br>
+    <strong>解法一（直接線積分）</strong>：參數化 \(C\)：\(\mathbf{r}(t)=(\cos t,\sin t,0)\)，\(t\in[0,2\pi]\)<br>
+    \(\displaystyle\oint_C \mathbf{F}\cdot d\mathbf{r} = \int_0^{2\pi}(\sin t(-\sin t)+(-\cos t)(\cos t))\,dt = \int_0^{2\pi}(-1)\,dt = -2\pi\)<br><br>
+    <strong>解法二（Stokes 定理）</strong>：\(\nabla\times\mathbf{F}=(0,0,-2)\)，\(\hat{\mathbf{n}}=\mathbf{k}\)（取上方法向量的 z 分量），<br>
+    \(\displaystyle\iint_S (\nabla\times\mathbf{F})\cdot\hat{\mathbf{n}}\,dA = \iint_D (-2)\,dA = -2\pi\) ✓
+  </div>
+</div>
+</div>
+
+<div class="footer">工程數學二 — 向量微積分互動教學 © 2025</div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<script>
+/* ===== 導航 ===== */
+function go(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const items=document.querySelectorAll('.nav-item');
+  items.forEach(n=>{if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes(id))n.classList.add('active')});
+  document.querySelector('.sidebar').classList.remove('open');
+  window.scrollTo(0,0);
+  renderMathInElement(document.getElementById(id),{delimiters:[{left:'$',right:'$',display:true},{left:'\\(',right:'\\)',display:false}]});
+  startAnimForSection(id);
+}
+
+/* ===== 安全數學解析器 ===== */
+function safeEval(expr,vars){
+  let e=expr.replace(/\s/g,'');
+  for(let k in vars) e=e.replace(new RegExp(k,'g'),'('+vars[k]+')');
+  e=e.replace(/\^/g,'**').replace(/sin/g,'Math.sin').replace(/cos/g,'Math.cos')
+    .replace(/tan/g,'Math.tan').replace(/exp/g,'Math.exp').replace(/log/g,'Math.log')
+    .replace(/sqrt/g,'Math.sqrt').replace(/abs/g,'Math.abs').replace(/pi/g,'Math.PI')
+    .replace(/e\b/g,'Math.E');
+  try{return Function('"use strict";return ('+e+')')();}catch(err){return NaN;}
+}
+
+/* ===== 向量函數計算器 ===== */
+function calcVecFunc(){
+  const xE=document.getElementById('vf-x').value;
+  const yE=document.getElementById('vf-y').value;
+  const zE=document.getElementById('vf-z').value;
+  const t=parseFloat(document.getElementById('vf-t').value);
+  const h=1e-6;
+  const v={t:String(t)};
+  const vp={t:String(t+h)};
+  const vm={t:String(t-h)};
+  const rx=safeEval(xE,v),ry=safeEval(yE,v),rz=safeEval(zE,v);
+  const dxdt=(safeEval(xE,vp)-safeEval(xE,vm))/(2*h);
+  const dydt=(safeEval(yE,vp)-safeEval(yE,vm))/(2*h);
+  const dzdt=(safeEval(zE,vp)-safeEval(zE,vm))/(2*h);
+  const spd=Math.sqrt(dxdt*dxdt+dydt*dydt+dzdt*dzdt);
+  const Tx=dxdt/spd,Ty=dydt/spd,Tz=dzdt/spd;
+  const box=document.getElementById('vf-result');
+  box.innerHTML=`<b style="color:var(--gold)">r(${t})</b> = (${rx.toFixed(4)}, ${ry.toFixed(4)}, ${rz.toFixed(4)})<br>`
+    +`<b style="color:var(--teal)">r'(${t})</b> = (${dxdt.toFixed(4)}, ${dydt.toFixed(4)}, ${dzdt.toFixed(4)})<br>`
+    +`<b style="color:var(--green)">||r'(${t})||</b> = ${spd.toFixed(4)}<br>`
+    +`<b style="color:var(--purple)">T(${t})</b> = (${Tx.toFixed(4)}, ${Ty.toFixed(4)}, ${Tz.toFixed(4)})`;
+}
+
+/* ===== 弧長計算器 ===== */
+function calcArc(){
+  const b=parseFloat(document.getElementById('arc-b').value);
+  const T=parseFloat(document.getElementById('arc-T').value);
+  // r(t)=(cos t, sin t, bt), r'(t)=(-sin t, cos t, b), ||r'||=sqrt(1+b^2)
+  const spd=Math.sqrt(1+b*b);
+  const s=spd*T;
+  const box=document.getElementById('arc-result');
+  box.innerHTML=`<b style="color:var(--teal)">r'(t)</b> = (-sin t, cos t, ${b})<br>`
+    +`<b style="color:var(--green)">||r'(t)||</b> = √(1 + ${b}²) = ${spd.toFixed(6)}<br>`
+    +`<b style="color:var(--gold)">弧長 s</b> = ${spd.toFixed(6)} × ${T} = <strong style="color:var(--text)">${s.toFixed(6)}</strong>`;
+}
+
+/* ===== 曲率計算器 ===== */
+function calcCurvature(){
+  const fExpr=document.getElementById('curv-f').value;
+  const x0=parseFloat(document.getElementById('curv-x').value);
+  const h=1e-5;
+  const f=x=>safeEval(fExpr,{x:String(x)});
+  const fp=(f(x0+h)-f(x0-h))/(2*h);
+  const fpp=(f(x0+h)-2*f(x0)+f(x0-h))/(h*h);
+  const kappa=Math.abs(fpp)/Math.pow(1+fp*fp,1.5);
+  const rho=1/kappa;
+  const box=document.getElementById('curv-result');
+  box.innerHTML=`<b style="color:var(--teal)">f(${x0})</b> = ${f(x0).toFixed(6)}<br>`
+    +`<b style="color:var(--green)">f'(${x0})</b> = ${fp.toFixed(6)}<br>`
+    +`<b style="color:var(--purple)">f''(${x0})</b> = ${fpp.toFixed(6)}<br>`
+    +`<b style="color:var(--gold)">κ</b> = |${fpp.toFixed(4)}| / (1+${fp.toFixed(4)}²)^(3/2) = <strong style="color:var(--text)">${kappa.toFixed(6)}</strong><br>`
+    +`<b style="color:var(--tan)">曲率半徑 ρ</b> = 1/κ = ${rho.toFixed(6)}`;
+}
+
+/* ===== 梯度計算器 ===== */
+function calcGrad(){
+  const fExpr=document.getElementById('grad-f').value;
+  const x0=parseFloat(document.getElementById('grad-x').value);
+  const y0=parseFloat(document.getElementById('grad-y').value);
+  const a=parseFloat(document.getElementById('grad-ua').value);
+  const b=parseFloat(document.getElementById('grad-ub').value);
+  const h=1e-6;
+  const f=(x,y)=>safeEval(fExpr,{x:String(x),y:String(y)});
+  const fx=(f(x0+h,y0)-f(x0-h,y0))/(2*h);
+  const fy=(f(x0,y0+h)-f(x0,y0-h))/(2*h);
+  const gradNorm=Math.sqrt(fx*fx+fy*fy);
+  const uNorm=Math.sqrt(a*a+b*b);
+  const ux=a/uNorm,uy=b/uNorm;
+  const Du=fx*ux+fy*uy;
+  const box=document.getElementById('grad-result');
+  box.innerHTML=`<b style="color:var(--teal)">f(${x0},${y0})</b> = ${f(x0,y0).toFixed(6)}<br>`
+    +`<b style="color:var(--gold)">∇f</b> = (${fx.toFixed(4)}, ${fy.toFixed(4)})<br>`
+    +`<b style="color:var(--green)">||∇f||</b> = ${gradNorm.toFixed(6)}（最大方向導數）<br>`
+    +`<b style="color:var(--purple)">û</b> = (${ux.toFixed(4)}, ${uy.toFixed(4)})<br>`
+    +`<b style="color:var(--red)">D_u f</b> = ∇f · û = <strong style="color:var(--text)">${Du.toFixed(6)}</strong>`;
+}
+
+/* ===== 散度計算器 ===== */
+function calcDiv(){
+  const f1=document.getElementById('div-f1').value;
+  const f2=document.getElementById('div-f2').value;
+  const f3=document.getElementById('div-f3').value;
+  const x0=parseFloat(document.getElementById('div-x').value);
+  const y0=parseFloat(document.getElementById('div-y').value);
+  const z0=parseFloat(document.getElementById('div-z').value);
+  const h=1e-6;
+  const ev=(expr,x,y,z)=>safeEval(expr,{x:String(x),y:String(y),z:String(z)});
+  const dF1dx=(ev(f1,x0+h,y0,z0)-ev(f1,x0-h,y0,z0))/(2*h);
+  const dF2dy=(ev(f2,x0,y0+h,z0)-ev(f2,x0,y0-h,z0))/(2*h);
+  const dF3dz=(ev(f3,x0,y0,z0+h)-ev(f3,x0,y0,z0-h))/(2*h);
+  const divF=dF1dx+dF2dy+dF3dz;
+  const box=document.getElementById('div-result');
+  box.innerHTML=`<b style="color:var(--teal)">∂F₁/∂x</b> = ${dF1dx.toFixed(6)}<br>`
+    +`<b style="color:var(--green)">∂F₂/∂y</b> = ${dF2dy.toFixed(6)}<br>`
+    +`<b style="color:var(--purple)">∂F₃/∂z</b> = ${dF3dz.toFixed(6)}<br>`
+    +`<b style="color:var(--gold)">div F = ∇·F</b> = <strong style="color:var(--text)">${divF.toFixed(6)}</strong>`
+    +(divF>0.001?' <span style="color:var(--red)">（源，向外發散）</span>':divF<-0.001?' <span style="color:var(--blue)">（匯，向內匯聚）</span>':' <span style="color:var(--green)">（不可壓縮）</span>');
+}
+
+/* ===== 旋度計算器 ===== */
+function calcCurl(){
+  const f1=document.getElementById('curl-f1').value;
+  const f2=document.getElementById('curl-f2').value;
+  const f3=document.getElementById('curl-f3').value;
+  const x0=parseFloat(document.getElementById('curl-x').value);
+  const y0=parseFloat(document.getElementById('curl-y').value);
+  const z0=parseFloat(document.getElementById('curl-z').value);
+  const h=1e-6;
+  const ev=(expr,x,y,z)=>safeEval(expr,{x:String(x),y:String(y),z:String(z)});
+  const dF3dy=(ev(f3,x0,y0+h,z0)-ev(f3,x0,y0-h,z0))/(2*h);
+  const dF2dz=(ev(f2,x0,y0,z0+h)-ev(f2,x0,y0,z0-h))/(2*h);
+  const dF1dz=(ev(f1,x0,y0,z0+h)-ev(f1,x0,y0,z0-h))/(2*h);
+  const dF3dx=(ev(f3,x0+h,y0,z0)-ev(f3,x0-h,y0,z0))/(2*h);
+  const dF2dx=(ev(f2,x0+h,y0,z0)-ev(f2,x0-h,y0,z0))/(2*h);
+  const dF1dy=(ev(f1,x0,y0+h,z0)-ev(f1,x0,y0-h,z0))/(2*h);
+  const ci=dF3dy-dF2dz, cj=dF1dz-dF3dx, ck=dF2dx-dF1dy;
+  const mag=Math.sqrt(ci*ci+cj*cj+ck*ck);
+  const box=document.getElementById('curl-result');
+  box.innerHTML=`<b style="color:var(--gold)">curl F = ∇×F</b> = (<span style="color:var(--teal)">${ci.toFixed(6)}</span>, <span style="color:var(--green)">${cj.toFixed(6)}</span>, <span style="color:var(--purple)">${ck.toFixed(6)}</span>)<br>`
+    +`<b style="color:var(--tan)">||curl F||</b> = ${mag.toFixed(6)}`
+    +(mag<1e-4?' <span style="color:var(--green)">→ 無旋場（irrotational / conservative）</span>':'');
+}
+
+/* ===== 散度定理驗證 ===== */
+function calcDivThm(){
+  const a=parseFloat(document.getElementById('divthm-a').value);
+  const vol=(4/3)*Math.PI*a*a*a;
+  const divF=3;
+  const tripleInt=divF*vol;
+  // 直接面積分: F·n̂ on sphere = (x,y,z)·(x,y,z)/a = (x²+y²+z²)/a = a²/a = a
+  // ∬ a dA = a × 4πa² = 4πa³
+  const surfInt=a*4*Math.PI*a*a;
+  const box=document.getElementById('divthm-result');
+  box.innerHTML=`<b style="color:var(--teal)">div F</b> = ∂x/∂x + ∂y/∂y + ∂z/∂z = 3<br>`
+    +`<b style="color:var(--gold)">體積分</b> = 3 × (4/3)π(${a})³ = 3 × ${vol.toFixed(4)} = <strong style="color:var(--text)">${tripleInt.toFixed(4)}</strong><br><br>`
+    +`<b style="color:var(--purple)">面積分驗證</b>：球面上 F·n̂ = a = ${a}<br>`
+    +`∬ ${a} dA = ${a} × 4π(${a})² = <strong style="color:var(--text)">${surfInt.toFixed(4)}</strong><br><br>`
+    +(Math.abs(tripleInt-surfInt)<0.001?'<span style="color:var(--green);font-weight:700">✓ 兩者相等，散度定理成立！</span>':'<span style="color:var(--red)">計算有誤</span>');
+}
+
+/* ===== 動畫系統 ===== */
+var animFrames={};
+function stopAllAnim(){for(let k in animFrames){cancelAnimationFrame(animFrames[k]);delete animFrames[k];}}
+
+/* --- 01 向量函數：螺旋曲線 + 切線向量 --- */
+function animVecFunc(){
+  const cv=document.getElementById('cv-vecfunc');if(!cv)return;
+  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  let t0=0;
+  function draw(){
+    animFrames.vecfunc=requestAnimationFrame(draw);
+    c.clearRect(0,0,W,H);
+    // 3D projection params
+    const cx=W/2,cy=H/2+20,sc=90,az=0.3,el=0.5;
+    const cosA=Math.cos(az),sinA=Math.sin(az),cosE=Math.cos(el),sinE=Math.sin(el);
+    function proj(x,y,z){
+      const rx=x*cosA-y*sinA, ry=x*sinA*sinE+y*cosA*sinE+z*cosE;
+      const rz=x*sinA*cosE+y*cosA*cosE-z*sinE;
+      return [cx+rx*sc, cy-ry*sc];
+    }
+    // draw axes
+    c.lineWidth=1;c.globalAlpha=0.3;
+    c.strokeStyle='#f0ead6';
+    [[[0,0,0],[2.5,0,0]],[[0,0,0],[0,2.5,0]],[[0,0,0],[0,0,2.5]]].forEach(([a,b])=>{
+      const pa=proj(...a),pb=proj(...b);
+      c.beginPath();c.moveTo(pa[0],pa[1]);c.lineTo(pb[0],pb[1]);c.stroke();
+    });
+    c.globalAlpha=0.5;c.font='13px JetBrains Mono';c.fillStyle='#8a8070';
+    let lx=proj(2.7,0,0);c.fillText('x',lx[0],lx[1]);
+    let ly=proj(0,2.7,0);c.fillText('y',ly[0],ly[1]);
+    let lz=proj(0,0,2.7);c.fillText('z',lz[0],lz[1]);
+    c.globalAlpha=1;
+    // draw helix r(t)=(cos t, sin t, 0.15t)
+    const tMax=t0;
+    c.strokeStyle='#2d7d9a';c.lineWidth=2.5;c.beginPath();
+    for(let i=0;i<=200;i++){
+      const tt=i/200*4*Math.PI;
+      if(tt>tMax+0.01) break;
+      const p=proj(Math.cos(tt),Math.sin(tt),0.15*tt);
+      i===0?c.moveTo(p[0],p[1]):c.lineTo(p[0],p[1]);
+    }
+    c.stroke();
+    // ghost future curve
+    c.strokeStyle='rgba(45,125,154,0.15)';c.lineWidth=1.5;c.beginPath();
+    for(let i=0;i<=200;i++){
+      const tt=i/200*4*Math.PI;
+      const p=proj(Math.cos(tt),Math.sin(tt),0.15*tt);
+      i===0?c.moveTo(p[0],p[1]):c.lineTo(p[0],p[1]);
+    }
+    c.stroke();
+    // current point
+    const px=Math.cos(tMax),py=Math.sin(tMax),pz=0.15*tMax;
+    const pp=proj(px,py,pz);
+    c.fillStyle='#e8b339';c.beginPath();c.arc(pp[0],pp[1],6,0,Math.PI*2);c.fill();
+    // tangent vector r'(t)=(-sin t, cos t, 0.15)
+    const dx=-Math.sin(tMax),dy=Math.cos(tMax),dz=0.15;
+    const mag=Math.sqrt(dx*dx+dy*dy+dz*dz);
+    const sc2=0.8;
+    const tp=proj(px+dx*sc2/mag,py+dy*sc2/mag,pz+dz*sc2/mag);
+    c.strokeStyle='#e8b339';c.lineWidth=2.5;
+    c.beginPath();c.moveTo(pp[0],pp[1]);c.lineTo(tp[0],tp[1]);c.stroke();
+    // arrowhead
+    const ang=Math.atan2(tp[1]-pp[1],tp[0]-pp[0]);
+    c.fillStyle='#e8b339';c.beginPath();
+    c.moveTo(tp[0],tp[1]);
+    c.lineTo(tp[0]-10*Math.cos(ang-0.35),tp[1]-10*Math.sin(ang-0.35));
+    c.lineTo(tp[0]-10*Math.cos(ang+0.35),tp[1]-10*Math.sin(ang+0.35));
+    c.fill();
+    // label
+    c.fillStyle='#e8b339';c.font='bold 14px Noto Sans TC';c.fillText('T(t)',tp[0]+8,tp[1]-4);
+    // origin to r(t)
+    const op=proj(0,0,0);
+    c.strokeStyle='rgba(240,234,214,0.3)';c.lineWidth=1;c.setLineDash([4,4]);
+    c.beginPath();c.moveTo(op[0],op[1]);c.lineTo(pp[0],pp[1]);c.stroke();
+    c.setLineDash([]);
+    c.fillStyle='rgba(240,234,214,0.4)';c.font='12px JetBrains Mono';
+    c.fillText('r(t)',op[0]+(pp[0]-op[0])*0.45-15,op[1]+(pp[1]-op[1])*0.45);
+    // info
+    c.fillStyle='#c8c0b0';c.font='13px JetBrains Mono';
+    c.fillText(`t = ${tMax.toFixed(2)}   r(t) = (${px.toFixed(2)}, ${py.toFixed(2)}, ${pz.toFixed(2)})`,15,25);
+    t0+=0.02; if(t0>4*Math.PI) t0=0;
+  }
+  draw();
+}
+
+/* --- 02 弧長量測 --- */
+function animArcLen(){
+  const cv=document.getElementById('cv-arclen');if(!cv)return;
+  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  let t0=0;
+  function draw(){
+    animFrames.arclen=requestAnimationFrame(draw);
+    c.clearRect(0,0,W,H);
+    // curve: r(t)=(3cos(t)+0.5cos(3t), 2sin(t)+0.3sin(2t)) parametric
+    const cx=W/2,cy=H/2,sc=70;
+    function curve(t){return [cx+sc*(2.2*Math.cos(t)+0.4*Math.cos(3*t)), cy-sc*(1.5*Math.sin(t)+0.3*Math.sin(2*t))];}
+    // full curve ghost
+    c.strokeStyle='rgba(45,125,154,0.2)';c.lineWidth=2;c.beginPath();
+    for(let i=0;i<=300;i++){const p=curve(i/300*2*Math.PI);i===0?c.moveTo(p[0],p[1]):c.lineTo(p[0],p[1]);}
+    c.closePath();c.stroke();
+    // measured arc (green)
+    const tEnd=t0%(2*Math.PI+0.5);
+    c.strokeStyle='#3ba55d';c.lineWidth=4;c.beginPath();
+    let arcS=0;
+    for(let i=0;i<=300;i++){
+      const tt=i/300*Math.min(tEnd,2*Math.PI);
+      const p=curve(tt);i===0?c.moveTo(p[0],p[1]):c.lineTo(p[0],p[1]);
+      if(i>0){const pp=curve((i-1)/300*Math.min(tEnd,2*Math.PI));arcS+=Math.sqrt((p[0]-pp[0])**2+(p[1]-pp[1])**2);}
+    }
+    c.stroke();
+    // point
+    const tCur=Math.min(tEnd,2*Math.PI);
+    const pp=curve(tCur);
+    c.fillStyle='#e8b339';c.beginPath();c.arc(pp[0],pp[1],5,0,Math.PI*2);c.fill();
+    // ds element indicator
+    const h=0.05,p1=curve(tCur-h),p2=curve(tCur+h>2*Math.PI?tCur:tCur+h);
+    c.strokeStyle='#e8b339';c.lineWidth=2;c.setLineDash([3,3]);
+    c.beginPath();c.moveTo(p1[0],p1[1]);c.lineTo(p2[0],p2[1]);c.stroke();
+    c.setLineDash([]);
+    // info
+    const realArc=arcS/sc;
+    c.fillStyle='#c8c0b0';c.font='14px JetBrains Mono';
+    c.fillText(`弧長 s = ${(realArc).toFixed(2)} (pixel/${sc})`,15,25);
+    c.fillStyle='#3ba55d';c.fillText(`t = ${tCur.toFixed(2)} / ${(2*Math.PI).toFixed(2)}`,15,45);
+    t0+=0.025; if(t0>2*Math.PI+1) t0=0;
+  }
+  draw();
+}
+
+/* --- 03 曲率：密切圓 --- */
+function animCurvature(){
+  const cv=document.getElementById('cv-curvature');if(!cv)return;
+  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  let t0=0;
+  function f(x){return 0.15*x*x*x-0.8*x;}
+  function fp(x){return 0.45*x*x-0.8;}
+  function fpp(x){return 0.9*x;}
+  const ox=W/2, oy=H*0.65, sc=55;
+  function draw(){
+    animFrames.curv=requestAnimationFrame(draw);
+    c.clearRect(0,0,W,H);
+    // axes
+    c.strokeStyle='rgba(240,234,214,0.15)';c.lineWidth=1;
+    c.beginPath();c.moveTo(30,oy);c.lineTo(W-30,oy);c.stroke();
+    c.beginPath();c.moveTo(ox,20);c.lineTo(ox,H-20);c.stroke();
+    // curve
+    c.strokeStyle='#2d7d9a';c.lineWidth=2.5;c.beginPath();
+    for(let px=30;px<W-30;px++){
+      const x=(px-ox)/sc, y=f(x);
+      px===30?c.moveTo(px,oy-y*sc):c.lineTo(px,oy-y*sc);
+    }
+    c.stroke();
+    // moving point
+    const xr=-3+t0%(6.5);
+    const yr=f(xr);
+    const ppx=ox+xr*sc, ppy=oy-yr*sc;
+    // curvature
+    const y1=fp(xr), y2=fpp(xr);
+    const kappa=Math.abs(y2)/Math.pow(1+y1*y1,1.5);
+    const rho=kappa>0.001?1/kappa:999;
+    // osculating circle center: center is at (x - y'*(1+y'^2)/y'', y + (1+y'^2)/y'')
+    if(Math.abs(y2)>0.001){
+      const ccx=xr - y1*(1+y1*y1)/y2;
+      const ccy=yr + (1+y1*y1)/y2;
+      const cpx=ox+ccx*sc, cpy=oy-ccy*sc;
+      const rPx=rho*sc;
+      c.strokeStyle='rgba(168,85,247,0.5)';c.lineWidth=2;
+      c.beginPath();c.arc(cpx,cpy,Math.min(rPx,300),0,Math.PI*2);c.stroke();
+      // dashed line from point to center
+      c.strokeStyle='rgba(168,85,247,0.25)';c.setLineDash([4,4]);
+      c.beginPath();c.moveTo(ppx,ppy);c.lineTo(cpx,cpy);c.stroke();
+      c.setLineDash([]);
+    }
+    // T vector
+    const tLen=40;
+    const tAng=Math.atan(y1);
+    c.strokeStyle='#2d7d9a';c.lineWidth=2.5;
+    c.beginPath();c.moveTo(ppx,ppy);c.lineTo(ppx+tLen*Math.cos(tAng),ppy-tLen*Math.sin(tAng));c.stroke();
+    drawArrow(c,ppx,ppy,ppx+tLen*Math.cos(tAng),ppy-tLen*Math.sin(tAng),'#2d7d9a');
+    c.fillStyle='#2d7d9a';c.font='bold 13px Noto Sans TC';c.fillText('T',ppx+tLen*Math.cos(tAng)+5,ppy-tLen*Math.sin(tAng)-5);
+    // N vector (perpendicular, pointing toward center of curvature)
+    const nAng=tAng+(y2>0?Math.PI/2:-Math.PI/2);
+    const nLen=30;
+    c.strokeStyle='#3ba55d';c.lineWidth=2.5;
+    c.beginPath();c.moveTo(ppx,ppy);c.lineTo(ppx+nLen*Math.cos(nAng),ppy-nLen*Math.sin(nAng));c.stroke();
+    drawArrow(c,ppx,ppy,ppx+nLen*Math.cos(nAng),ppy-nLen*Math.sin(nAng),'#3ba55d');
+    c.fillStyle='#3ba55d';c.font='bold 13px Noto Sans TC';c.fillText('N',ppx+nLen*Math.cos(nAng)+5,ppy-nLen*Math.sin(nAng)-5);
+    // point
+    c.fillStyle='#e8b339';c.beginPath();c.arc(ppx,ppy,5,0,Math.PI*2);c.fill();
+    // info
+    c.fillStyle='#c8c0b0';c.font='13px JetBrains Mono';
+    c.fillText(`x = ${xr.toFixed(2)}   κ = ${kappa.toFixed(4)}   ρ = ${rho.toFixed(2)}`,15,25);
+    t0+=0.02;
+  }
+  draw();
+}
+
+function drawArrow(c,x1,y1,x2,y2,color){
+  const ang=Math.atan2(y2-y1,x2-x1);
+  c.fillStyle=color;c.beginPath();
+  c.moveTo(x2,y2);
+  c.lineTo(x2-8*Math.cos(ang-0.4),y2-8*Math.sin(ang-0.4));
+  c.lineTo(x2-8*Math.cos(ang+0.4),y2-8*Math.sin(ang+0.4));
+  c.fill();
+}
+
+/* --- 04 梯度向量場 + 等高線 --- */
+function drawGradField(){
+  const cv=document.getElementById('cv-gradient');if(!cv)return;
+  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  c.clearRect(0,0,W,H);
+  const cx=W/2,cy=H/2,sc=50;
+  // contour lines for f=x^2+y^2
+  c.lineWidth=1.5;
+  for(let r=1;r<=5;r++){
+    const rr=r*0.7;
+    c.strokeStyle=`rgba(240,234,214,${0.15+r*0.03})`;
+    c.beginPath();c.arc(cx,cy,rr*sc,0,Math.PI*2);c.stroke();
+    c.fillStyle='rgba(240,234,214,0.3)';c.font='11px JetBrains Mono';
+    c.fillText(`f=${(rr*rr).toFixed(1)}`,cx+rr*sc*0.71+3,cy-rr*sc*0.71-3);
+  }
+  // gradient arrows
+  for(let gx=-3;gx<=3;gx+=0.8){
+    for(let gy=-3;gy<=3;gy+=0.8){
+      if(gx===0&&gy===0) continue;
+      const r=Math.sqrt(gx*gx+gy*gy);
+      if(r>3.5||r<0.5) continue;
+      const px=cx+gx*sc, py=cy-gy*sc;
+      // grad f = (2x, 2y)
+      const gfx=2*gx, gfy=2*gy;
+      const gm=Math.sqrt(gfx*gfx+gfy*gfy);
+      const len=Math.min(gm*4,18);
+      const ex=px+gfx/gm*len, ey=py-gfy/gm*len;
+      c.strokeStyle='rgba(232,179,57,0.6)';c.lineWidth=1.5;
+      c.beginPath();c.moveTo(px,py);c.lineTo(ex,ey);c.stroke();
+      drawArrow(c,px,py,ex,ey,'rgba(232,179,57,0.6)');
+    }
+  }
+  // axes
+  c.strokeStyle='rgba(240,234,214,0.2)';c.lineWidth=1;
+  c.beginPath();c.moveTo(20,cy);c.lineTo(W-20,cy);c.stroke();
+  c.beginPath();c.moveTo(cx,20);c.lineTo(cx,H-20);c.stroke();
+  c.fillStyle='rgba(240,234,214,0.4)';c.font='12px JetBrains Mono';
+  c.fillText('x',W-25,cy-8);c.fillText('y',cx+8,28);
+  c.fillStyle='#e8b339';c.font='bold 13px Noto Sans TC';
+  c.fillText('∇f 垂直於等高線',15,25);
+}
+
+/* --- 05 散度：源與匯粒子動畫 --- */
+function animDivergence(){
+  const cv=document.getElementById('cv-div');if(!cv)return;
+  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  const particles=[];
+  for(let i=0;i<80;i++){
+    const side=i<40?0:1; // 0=source, 1=sink
+    const ang=Math.random()*Math.PI*2;
+    const r=Math.random()*80+5;
+    particles.push({side,ang,r,speed:0.3+Math.random()*0.4,born:Math.random()*100});
+  }
+  let frame=0;
+  function draw(){
+    animFrames.div=requestAnimationFrame(draw);
+    c.clearRect(0,0,W,H);
+    const srcX=W*0.25,srcY=H/2,snkX=W*0.75,snkY=H/2;
+    // labels
+    c.fillStyle='#e05555';c.font='bold 15px Noto Sans TC';c.fillText('源 (Source)',srcX-35,30);
+    c.fillStyle='#e05555';c.font='12px JetBrains Mono';c.fillText('div F > 0',srcX-30,48);
+    c.fillStyle='#5b9bd5';c.font='bold 15px Noto Sans TC';c.fillText('匯 (Sink)',snkX-30,30);
+    c.fillStyle='#5b9bd5';c.font='12px JetBrains Mono';c.fillText('div F < 0',snkX-28,48);
+    // center dots
+    c.fillStyle='#e05555';c.beginPath();c.arc(srcX,srcY,6,0,Math.PI*2);c.fill();
+    c.fillStyle='#5b9bd5';c.beginPath();c.arc(snkX,snkY,6,0,Math.PI*2);c.fill();
+    // divider
+    c.strokeStyle='rgba(240,234,214,0.1)';c.lineWidth=1;c.setLineDash([4,4]);
+    c.beginPath();c.moveTo(W/2,20);c.lineTo(W/2,H-20);c.stroke();c.setLineDash([]);
+    // particles
+    particles.forEach(p=>{
+      const maxR=110;
+      if(p.side===0){
+        // source: expand outward
+        p.r+=p.speed;
+        if(p.r>maxR){p.r=3;p.ang=Math.random()*Math.PI*2;}
+        const alpha=1-p.r/maxR;
+        const px=srcX+p.r*Math.cos(p.ang), py=srcY+p.r*Math.sin(p.ang);
+        c.fillStyle=`rgba(224,85,85,${alpha*0.8})`;
+        c.beginPath();c.arc(px,py,2.5,0,Math.PI*2);c.fill();
+      } else {
+        // sink: contract inward
+        p.r-=p.speed;
+        if(p.r<3){p.r=maxR;p.ang=Math.random()*Math.PI*2;}
+        const alpha=p.r/maxR;
+        const px=snkX+p.r*Math.cos(p.ang), py=snkY+p.r*Math.sin(p.ang);
+        c.fillStyle=`rgba(91,155,213,${alpha*0.8})`;
+        c.beginPath();c.arc(px,py,2.5,0,Math.PI*2);c.fill();
+      }
+    });
+    // flow arrows for source
+    for(let a=0;a<8;a++){
+      const ang=a*Math.PI/4;
+      const r1=25,r2=85;
+      const x1=srcX+r1*Math.cos(ang),y1=srcY+r1*Math.sin(ang);
+      const x2=srcX+r2*Math.cos(ang),y2=srcY+r2*Math.sin(ang);
+      c.strokeStyle='rgba(224,85,85,0.25)';c.lineWidth=1.5;
+      c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();
+      drawArrow(c,x1,y1,x2,y2,'rgba(224,85,85,0.3)');
+    }
+    // flow arrows for sink
+    for(let a=0;a<8;a++){
+      const ang=a*Math.PI/4;
+      const r1=85,r2=25;
+      const x1=snkX+r1*Math.cos(ang),y1=snkY+r1*Math.sin(ang);
+      const x2=snkX+r2*Math.cos(ang),y2=snkY+r2*Math.sin(ang);
+      c.strokeStyle='rgba(91,155,213,0.25)';c.lineWidth=1.5;
+      c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();
+      drawArrow(c,x1,y1,x2,y2,'rgba(91,155,213,0.3)');
+    }
+    frame++;
+  }
+  draw();
+}
+
+/* --- 06 旋度：旋轉流場 vs 無旋場 --- */
+function animCurl(){
+  const cv=document.getElementById('cv-curl');if(!cv)return;
+  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  const pL=[],pR=[];
+  for(let i=0;i<50;i++){
+    pL.push({ang:Math.random()*Math.PI*2,r:20+Math.random()*90});
+    pR.push({x:W*0.75+(Math.random()-0.5)*180,y:H/2+(Math.random()-0.5)*180});
+  }
+  function draw(){
+    animFrames.curl=requestAnimationFrame(draw);
+    c.clearRect(0,0,W,H);
+    const lcx=W*0.25,lcy=H/2,rcx=W*0.75,rcy=H/2;
+    // divider
+    c.strokeStyle='rgba(240,234,214,0.1)';c.lineWidth=1;c.setLineDash([4,4]);
+    c.beginPath();c.moveTo(W/2,20);c.lineTo(W/2,H-20);c.stroke();c.setLineDash([]);
+    // labels
+    c.fillStyle='#a855f7';c.font='bold 15px Noto Sans TC';c.fillText('旋轉場 F=(-y, x)',lcx-60,28);
+    c.fillStyle='#a855f7';c.font='12px JetBrains Mono';c.fillText('curl F = 2k ≠ 0',lcx-50,46);
+    c.fillStyle='#3ba55d';c.font='bold 15px Noto Sans TC';c.fillText('無旋場 F=(x, y)',rcx-55,28);
+    c.fillStyle='#3ba55d';c.font='12px JetBrains Mono';c.fillText('curl F = 0',rcx-35,46);
+    // LEFT: rotational field F=(-y,x) → particles orbit
+    pL.forEach(p=>{
+      p.ang+=0.015;
+      const px=lcx+p.r*Math.cos(p.ang),py=lcy+p.r*Math.sin(p.ang);
+      c.fillStyle='rgba(168,85,247,0.7)';c.beginPath();c.arc(px,py,3,0,Math.PI*2);c.fill();
+    });
+    // rotation arrows
+    for(let a=0;a<6;a++){
+      const ang=a*Math.PI/3;const r=60;
+      const px=lcx+r*Math.cos(ang),py=lcy+r*Math.sin(ang);
+      // F=(-y,x) at (r cos a, r sin a) → (-r sin a, r cos a) → tangent
+      const fx=-r*Math.sin(ang)*0.3,fy=r*Math.cos(ang)*0.3;
+      c.strokeStyle='rgba(168,85,247,0.4)';c.lineWidth=2;
+      c.beginPath();c.moveTo(px,py);c.lineTo(px+fx,py-fy);c.stroke();
+      drawArrow(c,px,py,px+fx,py-fy,'rgba(168,85,247,0.5)');
+    }
+    c.strokeStyle='rgba(168,85,247,0.15)';c.lineWidth=1;
+    c.beginPath();c.arc(lcx,lcy,60,0,Math.PI*2);c.stroke();
+    // RIGHT: irrotational field F=(x,y) → particles expand radially
+    pR.forEach(p=>{
+      const dx=p.x-rcx,dy=p.y-rcy;
+      const r=Math.sqrt(dx*dx+dy*dy);
+      if(r<1){p.x=rcx+(Math.random()-0.5)*20;p.y=rcy+(Math.random()-0.5)*20;return;}
+      p.x+=dx/r*0.4; p.y+=dy/r*0.4;
+      if(r>100){const ang=Math.random()*Math.PI*2;const nr=10+Math.random()*20;p.x=rcx+nr*Math.cos(ang);p.y=rcy+nr*Math.sin(ang);}
+      c.fillStyle='rgba(59,165,93,0.7)';c.beginPath();c.arc(p.x,p.y,3,0,Math.PI*2);c.fill();
+    });
+    // radial arrows
+    for(let a=0;a<8;a++){
+      const ang=a*Math.PI/4;const r=40;
+      const px=rcx+r*Math.cos(ang),py=rcy+r*Math.sin(ang);
+      const len=25;
+      c.strokeStyle='rgba(59,165,93,0.4)';c.lineWidth=2;
+      c.beginPath();c.moveTo(px,py);c.lineTo(px+len*Math.cos(ang),py+len*Math.sin(ang));c.stroke();
+      drawArrow(c,px,py,px+len*Math.cos(ang),py+len*Math.sin(ang),'rgba(59,165,93,0.5)');
+    }
+  }
+  draw();
+}
+
+/* --- 07 線積分：做功動畫 --- */
+function animLineInt(){
+  const cv=document.getElementById('cv-lineint');if(!cv)return;
+  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  let t0=0;
+  const cx=W/2,cy=H/2,sc=60;
+  function curve(t){return [cx+sc*(2*Math.cos(t)),cy-sc*(1.2*Math.sin(t))];}
+  function curveD(t){return [-2*Math.sin(t), 1.2*Math.cos(t)];}
+  // F field = (y, -x) rotational
+  function field(x,y){return [y*0.5,-x*0.5];}
+  function draw(){
+    animFrames.lineint=requestAnimationFrame(draw);
+    c.clearRect(0,0,W,H);
+    // draw field arrows in background
+    for(let gx=-4;gx<=4;gx+=1){
+      for(let gy=-2.5;gy<=2.5;gy+=1){
+        const px=cx+gx*sc*0.5,py=cy-gy*sc*0.5;
+        const [fx,fy]=field(gx*0.5,gy*0.5);
+        const fm=Math.sqrt(fx*fx+fy*fy);if(fm<0.01)continue;
+        const len=Math.min(fm*15,14);
+        c.strokeStyle='rgba(232,179,57,0.2)';c.lineWidth=1;
+        c.beginPath();c.moveTo(px,py);c.lineTo(px+fx/fm*len,py-fy/fm*len);c.stroke();
+        drawArrow(c,px,py,px+fx/fm*len,py-fy/fm*len,'rgba(232,179,57,0.25)');
+      }
+    }
+    // curve (full ghost)
+    c.strokeStyle='rgba(45,125,154,0.3)';c.lineWidth=2;c.beginPath();
+    for(let i=0;i<=100;i++){const p=curve(i/100*2*Math.PI);i===0?c.moveTo(p[0],p[1]):c.lineTo(p[0],p[1]);}
+    c.closePath();c.stroke();
+    // curve colored by work sign
+    let totalWork=0;
+    for(let i=0;i<200;i++){
+      const tt=i/200*Math.min(t0,2*Math.PI);
+      const tt2=(i+1)/200*Math.min(t0,2*Math.PI);
+      if(tt2>Math.min(t0,2*Math.PI))break;
+      const p1=curve(tt),p2=curve(tt2);
+      const [rdx,rdy]=curveD(tt);
+      const wx=(p1[0]-cx)/sc, wy=-(p1[1]-cy)/sc;
+      const [fx,fy]=field(wx,wy);
+      const work=fx*rdx+fy*rdy;
+      totalWork+=work*(tt2-tt);
+      c.strokeStyle=work>=0?'rgba(59,165,93,0.8)':'rgba(224,85,85,0.8)';
+      c.lineWidth=3.5;c.beginPath();c.moveTo(p1[0],p1[1]);c.lineTo(p2[0],p2[1]);c.stroke();
+    }
+    // point
+    const tCur=Math.min(t0,2*Math.PI);
+    const pp=curve(tCur);
+    c.fillStyle='#e8b339';c.beginPath();c.arc(pp[0],pp[1],5,0,Math.PI*2);c.fill();
+    // F at point
+    const wx=(pp[0]-cx)/sc, wy=-(pp[1]-cy)/sc;
+    const [fx,fy]=field(wx,wy);
+    const fm=Math.sqrt(fx*fx+fy*fy);
+    if(fm>0.01){
+      const fLen=30;
+      c.strokeStyle='#e8b339';c.lineWidth=2.5;
+      c.beginPath();c.moveTo(pp[0],pp[1]);c.lineTo(pp[0]+fx/fm*fLen,pp[1]-fy/fm*fLen);c.stroke();
+      drawArrow(c,pp[0],pp[1],pp[0]+fx/fm*fLen,pp[1]-fy/fm*fLen,'#e8b339');
+      c.fillStyle='#e8b339';c.font='bold 12px Noto Sans TC';c.fillText('F',pp[0]+fx/fm*fLen+5,pp[1]-fy/fm*fLen-3);
+    }
+    // dr tangent
+    const [rdx,rdy]=curveD(tCur);
+    const rm=Math.sqrt(rdx*rdx+rdy*rdy);
+    if(rm>0.01){
+      const drLen=25;
+      c.strokeStyle='#2d7d9a';c.lineWidth=2;
+      c.beginPath();c.moveTo(pp[0],pp[1]);c.lineTo(pp[0]+rdx/rm*drLen,pp[1]-rdy/rm*drLen);c.stroke();
+      drawArrow(c,pp[0],pp[1],pp[0]+rdx/rm*drLen,pp[1]-rdy/rm*drLen,'#2d7d9a');
+      c.fillStyle='#2d7d9a';c.font='bold 12px Noto Sans TC';c.fillText('dr',pp[0]+rdx/rm*drLen+5,pp[1]-rdy/rm*drLen-3);
+    }
+    // info
+    c.fillStyle='#c8c0b0';c.font='13px JetBrains Mono';
+    c.fillText(`W = ∫F·dr = ${totalWork.toFixed(3)}`,15,25);
+    c.fillText(`t = ${tCur.toFixed(2)}`,15,45);
+    t0+=0.025; if(t0>2*Math.PI+0.5) t0=0;
+  }
+  draw();
+}
+
+/* --- 09 Green 定理：循環動畫 --- */
+function animGreen(){
+  const cv=document.getElementById('cv-green');if(!cv)return;
+  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  let t0=0;
+  const cx=W/2,cy=H/2;
+  function draw(){
+    animFrames.green=requestAnimationFrame(draw);
+    c.clearRect(0,0,W,H);
+    // region D (ellipse)
+    c.fillStyle='rgba(232,179,57,0.08)';
+    c.beginPath();c.ellipse(cx,cy,160,100,0,0,Math.PI*2);c.fill();
+    c.strokeStyle='rgba(232,179,57,0.3)';c.lineWidth=1.5;
+    c.beginPath();c.ellipse(cx,cy,160,100,0,0,Math.PI*2);c.stroke();
+    c.fillStyle='rgba(232,179,57,0.4)';c.font='16px Noto Sans TC';c.fillText('D',cx-8,cy+5);
+    // boundary C with arrows
+    const nArrows=16;
+    for(let i=0;i<nArrows;i++){
+      const ang=((i+t0*2)/nArrows)*Math.PI*2;
+      const px=cx+160*Math.cos(ang),py=cy-100*Math.sin(ang);
+      // tangent direction (CCW)
+      const tx=-160*Math.sin(ang),ty=-100*Math.cos(ang);
+      const tm=Math.sqrt(tx*tx+ty*ty);
+      const arLen=18;
+      c.strokeStyle='rgba(45,125,154,0.7)';c.lineWidth=2;
+      c.beginPath();c.moveTo(px,py);c.lineTo(px+tx/tm*arLen,py-ty/tm*arLen);c.stroke();
+      drawArrow(c,px,py,px+tx/tm*arLen,py-ty/tm*arLen,'rgba(45,125,154,0.8)');
+    }
+    // boundary path (teal)
+    c.strokeStyle='#2d7d9a';c.lineWidth=3;
+    c.beginPath();c.ellipse(cx,cy,160,100,0,0,Math.PI*2);c.stroke();
+    // moving point on C
+    const tCur=t0*0.8;
+    const ppx=cx+160*Math.cos(tCur),ppy=cy-100*Math.sin(tCur);
+    c.fillStyle='#e8b339';c.beginPath();c.arc(ppx,ppy,5,0,Math.PI*2);c.fill();
+    // labels
+    c.fillStyle='#2d7d9a';c.font='bold 14px Noto Sans TC';c.fillText('C（逆時針）',cx+140,cy-110);
+    // curl symbols inside
+    const nSwirl=5;
+    for(let i=0;i<nSwirl;i++){
+      const sx=cx+(Math.random()-0.5)*200, sy=cy+(Math.random()-0.5)*120;
+      // check inside ellipse
+      if(((sx-cx)/160)**2+((sy-cy)/100)**2<0.7){
+        c.strokeStyle='rgba(232,179,57,0.2)';c.lineWidth=1;
+        const sr=8;const sa=t0*2+i;
+        c.beginPath();c.arc(sx,sy,sr,sa,sa+Math.PI*1.5);c.stroke();
+      }
+    }
+    // formula labels
+    c.fillStyle='#2d7d9a';c.font='bold 13px JetBrains Mono';c.fillText('∮_C F·dr',15,28);
+    c.fillStyle='#c8c0b0';c.font='13px JetBrains Mono';c.fillText('=',130,28);
+    c.fillStyle='#e8b339';c.font='bold 13px JetBrains Mono';c.fillText('∬_D (∂Q/∂x - ∂P/∂y) dA',150,28);
+    t0+=0.015;
+  }
+  draw();
+}
+
+/* --- 08 路徑獨立性 --- */
+function animPathInd(){
+  const cv=document.getElementById('cv-pathind');if(!cv)return;
+  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  let t0=0;
+  const cx=W/2,cy=H/2,sc=80;
+  // Points A and B
+  const ax=-2,ay=-1,bx=2,by=1;
+  // Path 1: straight line from A to B
+  function path1(u){return [ax+(bx-ax)*u, ay+(by-ay)*u];}
+  // Path 2: curved path (goes around)
+  function path2(u){
+    const t=u*Math.PI;
+    const r=Math.sqrt(ax*ax+ay*ay)+u*0.5;
+    const ang=Math.atan2(ay,ax)+t*0.8;
+    return [r*Math.cos(ang), r*Math.sin(ang)];
+  }
+  // Potential function φ(x,y) = xy
+  function potential(x,y){return x*y;}
+  function draw(){
+    animFrames.pathind=requestAnimationFrame(draw);
+    c.clearRect(0,0,W,H);
+    // Draw conservative field F=(y,x) as grid of arrows
+    for(let gx=-3;gx<=3;gx+=1.2){
+      for(let gy=-2;gy<=2;gy+=1.2){
+        const px=cx+gx*sc, py=cy-gy*sc;
+        const fx=gy*0.5, fy=gx*0.5;
+        const fm=Math.sqrt(fx*fx+fy*fy);if(fm<0.01)continue;
+        const len=Math.min(fm*12,12);
+        c.strokeStyle='rgba(232,179,57,0.2)';c.lineWidth=1;
+        c.beginPath();c.moveTo(px,py);c.lineTo(px+fx/fm*len,py-fy/fm*len);c.stroke();
+      }
+    }
+    // Path 1 (green)
+    c.strokeStyle='rgba(59,165,93,0.5)';c.lineWidth=2.5;c.beginPath();
+    for(let i=0;i<=50;i++){
+      const [x,y]=path1(i/50);
+      const p=[cx+x*sc, cy-y*sc];
+      i===0?c.moveTo(p[0],p[1]):c.lineTo(p[0],p[1]);
+    }
+    c.stroke();
+    // Path 2 (purple)
+    c.strokeStyle='rgba(168,85,247,0.5)';c.lineWidth=2.5;c.beginPath();
+    for(let i=0;i<=50;i++){
+      const [x,y]=path2(i/50);
+      const p=[cx+x*sc, cy-y*sc];
+      i===0?c.moveTo(p[0],p[1]):c.lineTo(p[0],p[1]);
+    }
+    c.stroke();
+    // Particles on paths
+    const tCur=Math.min(t0*0.8,1.0);
+    const [x1,y1]=path1(tCur);
+    const [x2,y2]=path2(tCur);
+    c.fillStyle='#3ba55d';c.beginPath();c.arc(cx+x1*sc,cy-y1*sc,5,0,Math.PI*2);c.fill();
+    c.fillStyle='#a855f7';c.beginPath();c.arc(cx+x2*sc,cy-y2*sc,5,0,Math.PI*2);c.fill();
+    // Points A and B
+    c.fillStyle='#e8b339';c.beginPath();c.arc(cx+ax*sc,cy-ay*sc,6,0,Math.PI*2);c.fill();
+    c.fillStyle='#e8b339';c.beginPath();c.arc(cx+bx*sc,cy-by*sc,6,0,Math.PI*2);c.fill();
+    c.fillStyle='#e8b339';c.font='bold 13px Noto Sans TC';
+    c.fillText('A',cx+ax*sc-12,cy-ay*sc-10);
+    c.fillText('B',cx+bx*sc+8,cy-by*sc+8);
+    // Calculations
+    const phi_A=potential(ax,ay);
+    const phi_B=potential(bx,by);
+    const phi_diff=phi_B-phi_A;
+    c.fillStyle='#c8c0b0';c.font='13px JetBrains Mono';
+    c.fillText(`φ(A) = ${phi_A.toFixed(2)}   φ(B) = ${phi_B.toFixed(2)}   φ(B) - φ(A) = ${phi_diff.toFixed(2)}`,15,25);
+    c.fillStyle='#3ba55d';c.font='12px Noto Sans TC';c.fillText('路徑一',15,48);
+    c.fillStyle='#a855f7';c.font='12px Noto Sans TC';c.fillText('路徑二',15,68);
+    t0+=0.02;if(t0>2.5)t0=0;
+  }
+  draw();
+}
+
+/* --- 10 面積分 --- */
+function animSurfInt(){
+  const cv=document.getElementById('cv-surfint');if(!cv)return;
+  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  let t0=0;
+  const cx=W/2,cy=H/2,scale=60;
+  function draw(){
+    animFrames.surfint=requestAnimationFrame(draw);
+    c.clearRect(0,0,W,H);
+    // Draw hemisphere in isometric projection
+    // Wireframe: concentric circles (parallels) and meridians
+    c.strokeStyle='rgba(240,234,214,0.3)';c.lineWidth=1;
+    // Parallels (circles)
+    for(let i=1;i<=4;i++){
+      const r=i*0.25*scale;
+      c.beginPath();c.arc(cx,cy,r,0,Math.PI*2);c.stroke();
+    }
+    // Meridians
+    for(let ang=0;ang<Math.PI*2;ang+=Math.PI/6){
+      c.beginPath();
+      for(let lat=0;lat<=Math.PI/2;lat+=0.05){
+        const rho=Math.sin(lat)*scale;
+        const x=cx+rho*Math.cos(ang);
+        const y=cy-rho*Math.sin(lat)*0.6;
+        lat===0?c.moveTo(x,y):c.lineTo(x,y);
+      }
+      c.stroke();
+    }
+    // Normal vectors at several points
+    const nPoints=6;
+    for(let i=0;i<nPoints;i++){
+      const ang=i*Math.PI*2/nPoints+t0;
+      const lat=Math.PI/3;
+      const rho=Math.sin(lat)*scale;
+      const px=cx+rho*Math.cos(ang);
+      const py=cy-rho*Math.sin(lat)*0.6;
+      // Normal vector outward (at this latitude and angle)
+      const nx=Math.cos(ang);
+      const ny=-Math.sin(lat)*0.6;
+      const nm=Math.sqrt(nx*nx+ny*ny);
+      const nLen=25;
+      c.strokeStyle='#e8b339';c.lineWidth=2;
+      c.beginPath();c.moveTo(px,py);
+      c.lineTo(px+nx/nm*nLen,py+ny/nm*nLen);c.stroke();
+      drawArrow(c,px,py,px+nx/nm*nLen,py+ny/nm*nLen,'#e8b339');
+    }
+    // Highlighted patch (small surface element)
+    const pAng=t0;
+    const pLat=Math.PI/4;
+    const prho=Math.sin(pLat)*scale;
+    const p1x=cx+prho*Math.cos(pAng);
+    const p1y=cy-prho*Math.sin(pLat)*0.6;
+    c.fillStyle='rgba(232,179,57,0.2)';c.beginPath();
+    c.arc(p1x,p1y,12,0,Math.PI*2);c.fill();
+    // Labels
+    c.fillStyle='#c8c0b0';c.font='13px JetBrains Mono';c.fillText('曲面 S: 半球',15,25);
+    c.fillStyle='#e8b339';c.font='bold 12px Noto Sans TC';c.fillText('n̂',15,48);
+    c.fillStyle='#c8c0b0';c.font='12px Noto Sans TC';c.fillText('法向量',40,48);
+    c.fillStyle='#e8b339';c.font='bold 12px Noto Sans TC';c.fillText('dS',15,68);
+    c.fillStyle='#c8c0b0';c.font='12px Noto Sans TC';c.fillText('面積元素',40,68);
+    t0+=0.03;
+  }
+  draw();
+}
+
+/* --- 11 散度定理 --- */
+function animDivThm(){
+  const cv=document.getElementById('cv-divthm');if(!cv)return;
+  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  let t0=0;
+  const cx=W/2,cy=H/2,R=100;
+  const particles=[];
+  for(let i=0;i<60;i++){
+    particles.push({x:cx+(Math.random()-0.5)*120,y:cy+(Math.random()-0.5)*120});
+  }
+  function draw(){
+    animFrames.divthm=requestAnimationFrame(draw);
+    c.clearRect(0,0,W,H);
+    // Boundary circle
+    c.strokeStyle='#2d7d9a';c.lineWidth=3;
+    c.beginPath();c.arc(cx,cy,R,0,Math.PI*2);c.stroke();
+    // Inside: divergence (source points)
+    const nDiv=4;
+    for(let i=0;i<nDiv;i++){
+      const ang=i*Math.PI*2/nDiv;
+      const r=50;
+      const dx=cx+r*Math.cos(ang),dy=cy+r*Math.sin(ang);
+      // Small divergence arrows (indicating source)
+      for(let a=0;a<6;a++){
+        const aang=a*Math.PI/3;
+        const aLen=12;
+        const ex=dx+aLen*Math.cos(aang),ey=dy+aLen*Math.sin(aang);
+        c.strokeStyle='rgba(232,179,57,0.5)';c.lineWidth=1.5;
+        c.beginPath();c.moveTo(dx,dy);c.lineTo(ex,ey);c.stroke();
+        drawArrow(c,dx,dy,ex,ey,'rgba(232,179,57,0.5)');
+      }
+    }
+    // Flux arrows on boundary (pointing outward)
+    const nFlux=12;
+    for(let i=0;i<nFlux;i++){
+      const ang=i*Math.PI*2/nFlux+t0;
+      const px=cx+R*Math.cos(ang),py=cy+R*Math.sin(ang);
+      // Outward normal
+      const nx=Math.cos(ang),ny=Math.sin(ang);
+      const fLen=30;
+      c.strokeStyle='#2d7d9a';c.lineWidth=2;
+      c.beginPath();c.moveTo(px,py);c.lineTo(px+nx*fLen,py+ny*fLen);c.stroke();
+      drawArrow(c,px,py,px+nx*fLen,py+ny*fLen,'#2d7d9a');
+    }
+    // Animated particles flowing outward
+    particles.forEach(p=>{
+      const dx=p.x-cx,dy=p.y-cy;
+      const r=Math.sqrt(dx*dx+dy*dy);
+      if(r<5){p.x=cx+(Math.random()-0.5)*80;p.y=cy+(Math.random()-0.5)*80;return;}
+      const nr=dx/r,ny=dy/r;
+      p.x+=nr*1.5;p.y+=ny*1.5;
+      if(r>R+20){
+        p.x=cx+(Math.random()-0.5)*60;p.y=cy+(Math.random()-0.5)*60;
+      }
+      c.fillStyle='rgba(45,125,154,0.6)';c.beginPath();c.arc(p.x,p.y,2,0,Math.PI*2);c.fill();
+    });
+    // Labels
+    c.fillStyle='#2d7d9a';c.font='bold 14px Noto Sans TC';c.fillText('通量 ∮ F·n̂ dA',15,28);
+    c.fillStyle='#c8c0b0';c.font='13px JetBrains Mono';c.fillText('=',250,28);
+    c.fillStyle='#e8b339';c.font='bold 14px Noto Sans TC';c.fillText('散度 ∭ ∇·F dV',280,28);
+    t0+=0.03;
+  }
+  draw();
+}
+
+/* --- 12 Stokes 定理 --- */
+function animStokes(){
+  const cv=document.getElementById('cv-stokes');if(!cv)return;
+  const c=cv.getContext('2d'),W=cv.width,H=cv.height;
+  let t0=0;
+  const cx=W/2,cy=H/2,scale=70;
+  function draw(){
+    animFrames.stokes=requestAnimationFrame(draw);
+    c.clearRect(0,0,W,H);
+    // Draw tilted disk surface in pseudo-3D
+    // Base ellipse (tilted)
+    c.fillStyle='rgba(232,179,57,0.1)';
+    c.beginPath();c.ellipse(cx,cy,120,70,Math.PI/8,0,Math.PI*2);c.fill();
+    c.strokeStyle='rgba(232,179,57,0.3)';c.lineWidth=1;
+    c.beginPath();c.ellipse(cx,cy,120,70,Math.PI/8,0,Math.PI*2);c.stroke();
+    // Curl vectors on surface (pointing in normal direction)
+    const nCurl=8;
+    for(let i=0;i<nCurl;i++){
+      const ang=i*Math.PI*2/nCurl;
+      const r=50;
+      const px=cx+r*Math.cos(ang)*Math.cos(Math.PI/8)-r*Math.sin(ang)*Math.sin(Math.PI/8)*0.6;
+      const py=cy+r*Math.sin(ang)*Math.cos(Math.PI/8)*0.6;
+      // Curl vector (pointing "up" in normal direction)
+      const pulse=Math.sin(t0*2+i)*0.5+1;
+      const cLen=15*pulse;
+      c.strokeStyle='rgba(232,179,57,0.6)';c.lineWidth=2;
+      c.beginPath();c.moveTo(px,py);c.lineTo(px,py-cLen);c.stroke();
+      drawArrow(c,px,py,px,py-cLen,'rgba(232,179,57,0.6)');
+    }
+    // Boundary curve C
+    c.strokeStyle='#2d7d9a';c.lineWidth=3;
+    c.beginPath();c.ellipse(cx,cy,120,70,Math.PI/8,0,Math.PI*2);c.stroke();
+    // Circulation arrows on boundary
+    const nCirc=12;
+    for(let i=0;i<nCirc;i++){
+      const ang=i*Math.PI*2/nCirc+t0;
+      // Point on ellipse
+      const ux=120*Math.cos(ang),uy=70*Math.sin(ang);
+      const px=cx+ux*Math.cos(Math.PI/8)-uy*Math.sin(Math.PI/8)*0.6;
+      const py=cy+uy*Math.cos(Math.PI/8)*0.6;
+      // Tangent direction (CCW)
+      const tx=-120*Math.sin(ang),ty=70*Math.cos(ang);
+      const tm=Math.sqrt(tx*tx+ty*ty);
+      const cLen=18;
+      c.strokeStyle='#2d7d9a';c.lineWidth=2;
+      c.beginPath();c.moveTo(px,py);
+      c.lineTo(px+tx/tm*cLen*Math.cos(Math.PI/8),py-tx/tm*cLen*Math.sin(Math.PI/8)*0.6+ty/tm*cLen*0.6);
+      c.stroke();
+      drawArrow(c,px,py,px+tx/tm*cLen*Math.cos(Math.PI/8),py-tx/tm*cLen*Math.sin(Math.PI/8)*0.6+ty/tm*cLen*0.6,'#2d7d9a');
+    }
+    // Labels
+    c.fillStyle='#2d7d9a';c.font='bold 14px Noto Sans TC';c.fillText('∮_C F·dr',15,28);
+    c.fillStyle='#c8c0b0';c.font='13px JetBrains Mono';c.fillText('=',140,28);
+    c.fillStyle='#e8b339';c.font='bold 14px Noto Sans TC';c.fillText('∬_S (∇×F)·n̂ dA',160,28);
+    t0+=0.02;
+  }
+  draw();
+}
+
+/* ===== 動畫啟動/停止管理 ===== */
+function startAnimForSection(id){
+  stopAllAnim();
+  if(id==='sec-01') animVecFunc();
+  if(id==='sec-02') animArcLen();
+  if(id==='sec-03') animCurvature();
+  if(id==='sec-04') drawGradField();
+  if(id==='sec-05') animDivergence();
+  if(id==='sec-06') animCurl();
+  if(id==='sec-07') animLineInt();
+  if(id==='sec-08') animPathInd();
+  if(id==='sec-09') animGreen();
+  if(id==='sec-10') animSurfInt();
+  if(id==='sec-11') animDivThm();
+  if(id==='sec-12') animStokes();
+}
+
+/* ===== 初始化 ===== */
+window.onload=function(){
+  renderMathInElement(document.body,{delimiters:[{left:'$',right:'$',display:true},{left:'\\(',right:'\\)',display:false}]});
+  const hash=location.hash.replace('#','');
+  if(hash&&document.getElementById(hash)){
+    go(hash);
+  } else {
+    startAnimForSection('sec-01');
+  }
+};
+</script>
+</body>
+</html>
