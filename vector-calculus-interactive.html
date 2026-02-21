@@ -1020,12 +1020,13 @@ canvas{border:1px solid var(--border2);border-radius:8px;background:rgba(0,0,0,0
 <script>
 /* ===== Canvas responsive helper ===== */
 function prepCanvas(cv){
-  // Use CSS display width, fall back to HTML attribute, fall back to 760
-  var w=cv.clientWidth||cv.parentElement.clientWidth||parseInt(cv.getAttribute('width'))||760;
+  // Fixed reference coordinates (760×hAttr) with 2x retina; CSS scales display
+  var dw=cv.clientWidth||cv.parentElement.clientWidth||parseInt(cv.getAttribute('width'))||760;
   var hAttr=parseInt(cv.getAttribute('height'))||340;
-  var h=Math.round(hAttr*w/760); // proportional height
-  cv.width=w;cv.height=h;
-  cv.style.width=w+'px';cv.style.height=h+'px';
+  var w=760,h=hAttr;
+  cv.width=w*2;cv.height=h*2;
+  cv.style.height=Math.round(h*dw/w)+'px';
+  cv.getContext('2d').scale(2,2);
   return {w:w,h:h};
 }
 
