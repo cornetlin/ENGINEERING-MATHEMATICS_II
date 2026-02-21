@@ -41,7 +41,7 @@ button{font-family:inherit;cursor:pointer}
 .nav-item.active{color:var(--gold);background:rgba(232,179,57,.06);border-left-color:var(--gold);font-weight:700}
 .nav-item .num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text4);width:28px;flex-shrink:0}
 .hamburger{display:none;position:fixed;top:14px;left:14px;z-index:200;background:rgba(30,27,22,.95);border:1px solid var(--border);border-radius:10px;padding:10px 13px;cursor:pointer;color:var(--text2);font-size:18px}
-@media(max-width:800px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.hamburger{display:block}.main{margin-left:0!important;padding:20px!important;padding-top:56px!important}}
+@media(max-width:800px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.hamburger{display:block}.main{margin-left:0!important;width:100%!important;max-width:100%!important;padding:20px!important;padding-top:56px!important}}
 .main{margin-left:var(--nav-w);padding:36px 40px 60px;max-width:860px;margin-right:auto;width:calc(100% - var(--nav-w))}
 @media(min-width:1200px){.main{margin-left:calc(var(--nav-w) + (100% - var(--nav-w) - 860px)/2)}}
 .section{display:none;animation:fadeIn .3s ease}.section.active{display:block}
